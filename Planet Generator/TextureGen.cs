@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -19,9 +20,9 @@ namespace Planet_Generator
 
         public static int RandomPatternCount = 0;
 
-        public static int Passes = 1;
+        public static int Passes = 12;
 
-        public static double BlackPercentage = 0.99;
+        public static double BlackPercentage = 0.5;
 
         private static Bitmap GetTemplateBitmap(int width, int height)
         {
@@ -36,12 +37,6 @@ namespace Planet_Generator
                 {
                     Rectangle rectangleB = new Rectangle(r.Next(0, width-1), r.Next(0,height-1), r.Next(3,20), r.Next(3, 20));
                     graph.FillEllipse(Brushes.White, rectangleB);
-                }
-
-                for (int i = 0; i < 12; i++)
-                {
-                    Rectangle rectangleB = new Rectangle(r.Next(0, width - 1), r.Next(0, height - 1), r.Next(3, 20), r.Next(3, 20));
-                    graph.FillEllipse(Brushes.Black, rectangleB);
                 }
             }
             return bmp;
@@ -72,19 +67,70 @@ namespace Planet_Generator
         public static Bitmap GeneratePlanet(int resolution)
         {
             var template = GetTemplateBitmap(resolution, resolution);
-            //var noise = GenerateNoise(template, Color.Black, Color.White, BlackPercentage);
-            var patternDictionary = GeneratePatternDictionary();
+            var noise = GenerateNoise(template, Color.Black, Color.White, BlackPercentage);
+            var newMap = GetTemplateBitmap(resolution, resolution);
 
-            for(int i = 0; i < Passes; i++)
+            for (int i = 0; i < Passes; i++)
             {
                 Console.WriteLine("Pass " + (i + 1) + " of " + Passes);
-                foreach (var pattern in patternDictionary)
+                ApplyMajorityRulePass(noise, newMap);
+                var swap = noise;
+                noise = newMap;
+                newMap = swap;
+            }
+
+            return newMap;
+        }
+
+        private static void ApplyMajorityRulePass(Bitmap origin, Bitmap newMap)
+        {
+            for (int x = 1; x < origin.Width - 1; x++)
+            {
+                for (int y = 1; y < origin.Height - 1; y++)
                 {
-                    ApplyPatterns(template, new Dictionary<Bitmap, Bitmap>() { { pattern.Key, pattern.Value } });
+                    // get current section...
+                    var section = GetSection(new Rectangle(x-1, y-1, PatternWidth, PatternWidth), origin);
+
+                    MajorityRule(section, newMap, x, y);
+                }
+            }
+        }
+
+        private static void MajorityRule(Bitmap section, Bitmap origin, int xOrigin, int yOrigin)
+        {
+            int middleX = section.Width / 2;
+            int middleY = section.Height / 2;
+            int whiteCount = 0;
+            int blackCount = 0;
+            for (int x = 0; x < section.Width; x++)
+            {
+                for (int y = 0; y < section.Height; y++)
+                {
+                    var pixel = section.GetPixel(x, y);
+                    if(!(x == middleX && y == middleY))
+                    {
+                        if(SameColor(Color.White, pixel))
+                        {
+                            whiteCount++;
+                        }
+
+                        if(SameColor(Color.Black, pixel))
+                        {
+                            blackCount++;
+                        }
+                    }
                 }
             }
 
-            return template;
+            if(blackCount > 4)
+            {
+                origin.SetPixel(xOrigin, yOrigin, Color.White);
+            }
+            else
+            {
+                origin.SetPixel(xOrigin, yOrigin, Color.Black);
+            }
+
         }
 
         private static void ApplyPatterns(Bitmap origin, Dictionary<Bitmap, Bitmap> patterns)
