@@ -18,8 +18,6 @@ namespace Planet_Generator
 
         private static int PatternWidth = 3;
 
-        public static int RandomPatternCount = 0;
-
         public static int Passes = 12;
 
         public static double BlackPercentage = 0.5;
@@ -32,12 +30,6 @@ namespace Planet_Generator
             {
                 Rectangle rectangle = new Rectangle(0, 0, width, height);
                 graph.FillRectangle(Brushes.Black, rectangle);
-
-                for(int i = 0; i < 12; i++)
-                {
-                    Rectangle rectangleB = new Rectangle(r.Next(0, width-1), r.Next(0,height-1), r.Next(3,20), r.Next(3, 20));
-                    graph.FillEllipse(Brushes.White, rectangleB);
-                }
             }
             return bmp;
         }
@@ -79,7 +71,112 @@ namespace Planet_Generator
                 newMap = swap;
             }
 
+            var islandMap = GetTemplateBitmap(resolution, resolution);
+            var finalIslandMap = GenerateNoise(islandMap, Color.Black, Color.White, BlackPercentage);
+            var patterns = GeneratePatternDictionary();
+            ApplyPatterns(finalIslandMap, patterns);
+
+            var mergedMap = MergeMaps(finalIslandMap, newMap);
+            var heightMap = ToHeightMap(mergedMap);
+
+            for(int i = 0; i < 5; i++)
+            {
+                heightMap = SmoothHeightMap(heightMap);
+            }
+
+            GenerateColorMap(heightMap, mergedMap);
+
+            return mergedMap;
+
+        }
+
+        private static void GenerateColorMap(int[,] heightMap, Bitmap origin)
+        {
+            List<Color> colors = new List<Color>()
+            {
+                Color.Blue,
+                Color.LightBlue,
+                Color.SkyBlue,
+                Color.Tan,
+                Color.DarkKhaki,
+                Color.Green,
+                Color.YellowGreen,
+                Color.LightGray,
+                Color.White
+            };
+
+            for (int x = 0; x < origin.Width; x++)
+            {
+                for (int y = 0; y < origin.Height; y++)
+                {
+                    var divisor = (255*3) / colors.Count;
+                    var total = heightMap[x,y];
+                    total = Math.Max(1, total);
+                    var selectPosition = (total / divisor) - 1;
+                    selectPosition = Math.Max(0, selectPosition);
+                    var color = colors[selectPosition];
+                    origin.SetPixel(x, y, color);
+                }
+            }
+        }
+
+        private static int[,] ToHeightMap(Bitmap bitmap)
+        {
+            var array = new int[bitmap.Width, bitmap.Height];
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    var pixel = bitmap.GetPixel(x, y);
+                    var height = pixel.R + pixel.G + pixel.B;
+                    array[x, y] = height;
+                }
+            }
+            return array;
+        }
+
+        private static int[,] SmoothHeightMap(int[,] map)
+        {
+            var newMap = new int[map.GetLength(0),map.GetLength(1)];
+            for(int x = 1; x < map.GetLength(0); x++)
+            {
+                for(int y = 1; y < map.GetLength(1); y++)
+                {
+                    var value = map[x, y];
+                    var lastVal1 = map[x - 1, y -1];
+                    var lastVal2 = map[x, y - 1];
+                    var lastVal3 = map[x - 1, y];
+                    var smoothed = (lastVal1 + lastVal2 + lastVal3 + value) / 4;
+                    newMap[x, y] = smoothed;
+                }
+            }
+
             return newMap;
+        }
+
+        private static Bitmap MergeMaps(Bitmap a, Bitmap b)
+        {
+            for(int x = 0; x < a.Width; x++)
+            {
+                for(int y = 0 ; y < a.Height; y++)
+                {
+                   var pixelA = a.GetPixel(x, y);
+                   var pixelB = b.GetPixel(x, y);
+                   a.SetPixel(x, y, MergePixels(pixelA, pixelB));
+                }
+            }
+
+            return a;
+        }
+
+        private static Color MergePixels(Color first, Color second)
+        {
+            var r = (first.R + second.R) / 2;
+            var g = (first.G + second.G) / 2; ;
+            var b = (first.B + second.B) / 2; ;
+            var a = (first.A + second.A) / 2; ;
+
+            return Color.FromArgb(a, r, g, b);
         }
 
         private static void ApplyMajorityRulePass(Bitmap origin, Bitmap newMap)
@@ -249,17 +346,8 @@ namespace Planet_Generator
 
             for (int i = 0; i < 3; i++)
             {
-                (var item1, var item2) = LoadPatternFromDisk(@"Patterns\Pattern"+(i+1)+".png");
-                dictionary.Add(item1, item2);
-            }
-
-
-            var patterns1 = GeneratePatterns();
-            var patterns2 = GeneratePatterns();
-            foreach(var pattern in patterns1)
-            {
-                dictionary.Add(pattern, patterns2.First());
-                patterns2.RemoveAt(0);
+               (var item1, var item2) = LoadPatternFromDisk(@"Patterns\Pattern"+(i+1)+".png");
+               dictionary.Add(item1, item2);
             }
 
             return dictionary;
@@ -274,53 +362,6 @@ namespace Planet_Generator
             var bitmapRight = bitmap.Clone(new Rectangle(PatternWidth, 0, PatternWidth, PatternWidth), bitmap.PixelFormat);
 
             return (bitmapLeft, bitmapRight);
-        }
-
-        private static Bitmap GetBlankPattern(Color color)
-        {
-            Bitmap pattern = new Bitmap(PatternWidth, PatternWidth);
-            for (int y = 0; y < PatternWidth; y++)
-            {
-                for (int x = 0; x < PatternWidth; x++)
-                {
-                    pattern.SetPixel(x, y, color);
-                }
-            }
-            return pattern;
-        }
-
-        private static List<Bitmap> GeneratePatterns()
-        {
-            var patterns = new List<Bitmap>();
-            Random r = new Random();
-            for (int i = 0; i < RandomPatternCount; i++)
-            {
-                Bitmap pattern = new Bitmap(PatternWidth, PatternWidth);
-                for (int y = 0; y < PatternWidth; y++)
-                {
-                    for (int x = 0; x < PatternWidth; x++)
-                    {
-                        if (r.NextDouble() < 0.5)
-                        {
-                            pattern.SetPixel(x, y, Color.Transparent);
-                        }
-                        else
-                        {
-                            if (r.NextDouble() < 0.5)
-                            {
-                                pattern.SetPixel(x, y, Color.Black);
-                            }
-                            else
-                            {
-                                pattern.SetPixel(x, y, Color.White);
-                            }
-                        }
-                    }
-                }
-                patterns.Add(pattern);
-            }
-
-            return patterns;
         }
     }
 }
