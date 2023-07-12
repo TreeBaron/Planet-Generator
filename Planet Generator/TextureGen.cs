@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 
 namespace Planet_Generator
 {
@@ -18,15 +21,28 @@ namespace Planet_Generator
 
         public static int Passes = 1;
 
-        public static double BlackPercentage = 0.75;
+        public static double BlackPercentage = 0.99;
 
         private static Bitmap GetTemplateBitmap(int width, int height)
         {
+            Random r = new Random(DateTime.Now.Millisecond);
             Bitmap bmp = new Bitmap(width, height);
             using (Graphics graph = Graphics.FromImage(bmp))
             {
                 Rectangle rectangle = new Rectangle(0, 0, width, height);
                 graph.FillRectangle(Brushes.Black, rectangle);
+
+                for(int i = 0; i < 12; i++)
+                {
+                    Rectangle rectangleB = new Rectangle(r.Next(0, width-1), r.Next(0,height-1), r.Next(3,20), r.Next(3, 20));
+                    graph.FillEllipse(Brushes.White, rectangleB);
+                }
+
+                for (int i = 0; i < 12; i++)
+                {
+                    Rectangle rectangleB = new Rectangle(r.Next(0, width - 1), r.Next(0, height - 1), r.Next(3, 20), r.Next(3, 20));
+                    graph.FillEllipse(Brushes.Black, rectangleB);
+                }
             }
             return bmp;
         }
@@ -56,19 +72,19 @@ namespace Planet_Generator
         public static Bitmap GeneratePlanet(int resolution)
         {
             var template = GetTemplateBitmap(resolution, resolution);
-            var noise = GenerateNoise(template, Color.Black, Color.White, BlackPercentage);
+            //var noise = GenerateNoise(template, Color.Black, Color.White, BlackPercentage);
             var patternDictionary = GeneratePatternDictionary();
 
             for(int i = 0; i < Passes; i++)
             {
+                Console.WriteLine("Pass " + (i + 1) + " of " + Passes);
                 foreach (var pattern in patternDictionary)
                 {
-                    Console.WriteLine("Pass " + (i + 1) + " of " + Passes);
-                    ApplyPatterns(noise, new Dictionary<Bitmap, Bitmap>() { { pattern.Key, pattern.Value } });
+                    ApplyPatterns(template, new Dictionary<Bitmap, Bitmap>() { { pattern.Key, pattern.Value } });
                 }
             }
 
-            return noise;
+            return template;
         }
 
         private static void ApplyPatterns(Bitmap origin, Dictionary<Bitmap, Bitmap> patterns)
@@ -185,8 +201,12 @@ namespace Planet_Generator
         {
             var dictionary = new Dictionary<Bitmap, Bitmap>();
 
-            (var item1, var item2) = GeneratePattern1();
-            dictionary.Add(item1, item2);
+            for (int i = 0; i < 3; i++)
+            {
+                (var item1, var item2) = LoadPatternFromDisk(@"Patterns\Pattern"+(i+1)+".png");
+                dictionary.Add(item1, item2);
+            }
+
 
             var patterns1 = GeneratePatterns();
             var patterns2 = GeneratePatterns();
@@ -199,28 +219,15 @@ namespace Planet_Generator
             return dictionary;
         }
 
-        private static (Bitmap, Bitmap) GeneratePattern1()
+        private static (Bitmap, Bitmap) LoadPatternFromDisk(string filepath)
         {
-            var pattern = GetBlankPattern(Color.Black);
-            var result = GetBlankPattern(Color.White);
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filepath);
+            var bitmap = new Bitmap(path);
 
-            // pattern match
-            pattern.SetPixel(1, 1, Color.White);
+            var bitmapLeft = bitmap.Clone(new Rectangle(0,0,PatternWidth, PatternWidth), bitmap.PixelFormat);
+            var bitmapRight = bitmap.Clone(new Rectangle(PatternWidth, 0, PatternWidth, PatternWidth), bitmap.PixelFormat);
 
-            // result
-            result.SetPixel(0, 0, Color.Black);
-            result.SetPixel(1, 0, Color.White);
-            result.SetPixel(2, 0, Color.Black);
-
-            result.SetPixel(0, 1, Color.White);
-            result.SetPixel(1, 1, Color.White);
-            result.SetPixel(2, 1, Color.White);
-
-            result.SetPixel(0, 2, Color.Black);
-            result.SetPixel(1, 2, Color.White);
-            result.SetPixel(2, 2, Color.Black);
-
-            return (pattern, result);
+            return (bitmapLeft, bitmapRight);
         }
 
         private static Bitmap GetBlankPattern(Color color)

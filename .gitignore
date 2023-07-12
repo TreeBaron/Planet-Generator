@@ -1,0 +1,6 @@
+
+*.vsidx
+
+Planet Generator/obj/Debug/
+
+Planet Generator/.vs/Planet Generator/v17/

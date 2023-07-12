@@ -23,14 +23,15 @@ namespace Planet_Generator
             try
             {
                 resolution = Convert.ToInt32(ResolutionTextBox.Text);
-                PictureBox.Image = (Image)TextureGen.GeneratePlanet(resolution);
-                PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
             }
             catch
             {
                 MessageBox.Show("Enter a valid resolution.");
                 return;
             }
+
+            PictureBox.Image = (Image)TextureGen.GeneratePlanet(resolution);
+            PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
         }
     }
 }
