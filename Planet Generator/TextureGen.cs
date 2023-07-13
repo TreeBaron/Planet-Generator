@@ -229,7 +229,8 @@ namespace Planet_Generator
                         {
                             var multiplier = 1.0 / radius;
                             var distance = GetDistance(x, y, point.Item1, point.Item2);
-                            heightMap[x, y] += (int)(heightAdjust * (multiplier * distance));
+                            var finalMultiplier = 1.0 - multiplier;
+                            heightMap[x, y] += (int)(heightAdjust * finalMultiplier);
                         }
                     }
                 }
