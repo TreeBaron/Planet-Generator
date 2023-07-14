@@ -66,6 +66,18 @@ namespace Planet_Generator
             return image;
         }
 
+        public static Bitmap GenerateAtmosphere(int resolution, Color color)
+        {
+            Bitmap bmp = new Bitmap(resolution, resolution);
+            SolidBrush colorBrush = new SolidBrush(color);
+            using (Graphics graph = Graphics.FromImage(bmp))
+            {
+                Rectangle rectangle = new Rectangle(0, 0, resolution, resolution);
+                graph.FillEllipse(colorBrush, rectangle);
+            }
+            return bmp;
+        }
+
         public static Bitmap GeneratePlanet(int resolution)
         {
             var image = GetTemplateBitmapTransparent(resolution, resolution);
@@ -88,22 +100,55 @@ namespace Planet_Generator
                 Color.SkyBlue,
                 Color.Tan,
                 Color.DarkKhaki,
-                Color.Green,
                 Color.YellowGreen,
+                Color.Green,
+                Color.DarkOliveGreen,
                 Color.DarkOliveGreen,
                 Color.DarkGray,
                 Color.White
             };
 
-            GenerateColorMap(heightMap, image, colors);
+            GenerateColorMap(heightMap, image, colors, 4);
 
             for (int i = 0; i < 5; i++)
             {
                 SmoothColors(image);
             }
 
-            return OverlayImage(image, GenerateClouds(resolution), 0, 0, 0.75f);
+            int atmosphereThickness = 4;
 
+            var planet = OverlayImage(image, GenerateClouds(resolution), 0, 0, 0.75f);
+
+            planet = CutOutHole(image, resolution);
+
+            // make final canvas that is larger by the thickness of the atmosphere
+            var canvas = GetTemplateBitmapTransparent(resolution + (atmosphereThickness*2), resolution + (atmosphereThickness*2));
+            var atmosphere = GenerateAtmosphere(resolution + atmosphereThickness, Color.CornflowerBlue);
+
+            // place planet on canvas
+            var canvasAndPlanet = OverlayImage(canvas, planet, atmosphereThickness / 2, atmosphereThickness / 2, 1.0f);
+
+            // place atmosphere on canvas, over the planet
+            return OverlayImage(atmosphere, canvasAndPlanet, 0, 0, 1.0f);
+
+        }
+
+        private static Bitmap CutOutHole(Bitmap image, int resolution)
+        {
+            Bitmap finalImage = GetTemplateBitmapTransparent(resolution, resolution);
+
+            for(int y = 0; y < resolution; y++)
+            {
+                for(int x = 0; x < resolution; x++)
+                {
+                    if(GetDistance(x, y, resolution / 2, resolution / 2) < resolution / 2)
+                    {
+                        finalImage.SetPixel(x, y, image.GetPixel(x, y));
+                    }
+                }
+            }
+
+            return finalImage;
         }
 
         private static int[,] MergeHeightMaps(int[,] noiseHeightMap, int[,] heightMap)
@@ -364,11 +409,13 @@ namespace Planet_Generator
             return newColors;
         }
 
-        private static void GenerateColorMap(int[,] heightMap, Bitmap origin, List<Color> colors)
+        private static void GenerateColorMap(int[,] heightMap, Bitmap origin, List<Color> colors, int colorExpansionAmount = 1)
         {
             
-
-            colors = ExpandColors(colors);
+            for(int i = 0; i < colorExpansionAmount; i++)
+            {
+                colors = ExpandColors(colors);
+            }
 
             for (int x = 0; x < origin.Width; x++)
             {
