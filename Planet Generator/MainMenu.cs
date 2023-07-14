@@ -41,7 +41,10 @@ namespace Planet_Generator
                 return;
             }
 
-            PictureBox.Image = (Image)TextureGen.GeneratePlanet(resolution, atmosphereThickness);
+            var settings = Settings.GetEarthSettings(resolution);
+            settings.AtmosphereThickness = atmosphereThickness;
+
+            PictureBox.Image = (Image)TextureGen.GeneratePlanet(settings);
             PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
         }
     }

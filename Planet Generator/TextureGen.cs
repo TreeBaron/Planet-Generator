@@ -16,31 +16,26 @@ namespace Planet_Generator
 {
     class TextureGen
     {
-        public static Bitmap GenerateClouds(int resolution)
+        public static Bitmap GenerateClouds(Settings settings)
         {
-            var image = GetTemplateBitmapTransparent(resolution, resolution);
-            var heightMap = GenerateHeightMapDiamondSquareAlgo(resolution);
+            var image = GetTemplateBitmapTransparent(settings.Resolution, settings.Resolution);
+            var heightMap = GenerateHeightMapDiamondSquareAlgo(settings.Resolution);
 
 
-            AddContinents(heightMap, 12, resolution / 3, 200);
+            AddContinents(heightMap, settings.CloudContinentCount, settings.CloudContinentRadius, 200);
 
-            AddContinents(heightMap, 12, resolution / 3, -200);
+            AddContinents(heightMap, settings.CloudContinentCount, settings.CloudContinentRadius, -200);
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < settings.CloudSmoothHeightMap; i++)
             {
                 heightMap = SmoothHeightMap(heightMap);
             }
 
-            List<Color> colors = new List<Color>()
-            {
-                Color.Transparent,
-                Color.White,
-                Color.LightGray,
-            };
+            List<Color> colors = Settings.GetEarthCloudColors();
 
             GenerateColorMap(heightMap, image, colors);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < settings.CloudSmoothAmount; i++)
             {
                 SmoothColors(image);
             }
@@ -60,53 +55,45 @@ namespace Planet_Generator
             return bmp;
         }
 
-        public static Bitmap GeneratePlanet(int resolution, int atmosphereThickness)
+        public static Bitmap GeneratePlanet(Settings settings)
         {
-            var image = GetTemplateBitmapTransparent(resolution, resolution);
-            var heightMap = GenerateHeightMapDiamondSquareAlgo(resolution);
+            var image = GetTemplateBitmapTransparent(settings.Resolution, settings.Resolution);
+            var heightMap = GenerateHeightMapDiamondSquareAlgo(settings.Resolution);
 
 
-            AddContinents(heightMap, 12, resolution / 3, 200);
+            AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, settings.ContinentBoost);
 
-            AddContinents(heightMap, 12, resolution / 3, -200);
+            AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, -1*settings.ContinentBoost);
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < settings.SmoothHeightMapAmount; i++)
             {
                heightMap = SmoothHeightMap(heightMap);
             }
 
-            List<Color> colors = new List<Color>()
-            {
-                Color.Blue,
-                Color.LightBlue,
-                Color.SkyBlue,
-                Color.Tan,
-                Color.DarkKhaki,
-                Color.YellowGreen,
-                Color.Green,
-                Color.DarkOliveGreen,
-                Color.DarkOliveGreen,
-                Color.DarkGray,
-                Color.White
-            };
+            List<Color> colors = settings.PlanetColors;
 
             GenerateColorMap(heightMap, image, colors, 4);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < settings.SmoothTextureAmount; i++)
             {
                 SmoothColors(image);
             }
 
-            var planet = OverlayImage(image, GenerateClouds(resolution), 0, 0, 0.75f);
+            Bitmap planet;
 
-            planet = CutOutHole(image, resolution);
+            if (settings.GenerateClouds)
+            {
+                planet = OverlayImage(image, GenerateClouds(settings), 0, 0, 0.75f);
+            }
+
+            planet = CutOutHole(image, settings.Resolution);
 
             // make final canvas that is larger by the thickness of the atmosphere
-            var canvas = GetTemplateBitmapTransparent(resolution + (atmosphereThickness*2), resolution + (atmosphereThickness*2));
-            var atmosphere = GenerateAtmosphere(resolution + atmosphereThickness, Color.CornflowerBlue);
+            var canvas = GetTemplateBitmapTransparent(settings.Resolution + (settings.AtmosphereThickness*2), settings.Resolution + (settings.AtmosphereThickness*2));
+            var atmosphere = GenerateAtmosphere(settings.Resolution + settings.AtmosphereThickness, Color.CornflowerBlue);
 
             // place planet on canvas
-            var canvasAndPlanet = OverlayImage(canvas, planet, atmosphereThickness / 2, atmosphereThickness / 2, 1.0f);
+            var canvasAndPlanet = OverlayImage(canvas, planet, settings.AtmosphereThickness / 2, settings.AtmosphereThickness / 2, 1.0f);
 
             // place atmosphere on canvas, over the planet
             return OverlayImage(atmosphere, canvasAndPlanet, 0, 0, 1.0f);
