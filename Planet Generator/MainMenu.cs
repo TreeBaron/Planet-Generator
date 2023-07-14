@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Planet_Generator
@@ -42,6 +36,7 @@ namespace Planet_Generator
             }
 
             var settings = Settings.GetEarthSettings(resolution);
+
             settings.AtmosphereThickness = atmosphereThickness;
 
             PictureBox.Image = (Image)TextureGen.GeneratePlanet(settings);
