@@ -39,14 +39,15 @@ namespace Planet_Generator
             var image = GetTemplateBitmapTransparent(resolution, resolution);
             var heightMap = GenerateHeightMapDiamondSquareAlgo(resolution);
 
-            for (int i = 0; i < 6; i++)
+
+            AddContinents(heightMap, 12, resolution / 3, 200);
+
+            AddContinents(heightMap, 12, resolution / 3, -200);
+
+            for (int i = 0; i < 12; i++)
             {
                 heightMap = SmoothHeightMap(heightMap);
             }
-
-            AddContinents(heightMap, 12, resolution / 2, 300);
-
-            AddContinents(heightMap, 12, resolution / 2, -200);
 
             List<Color> colors = new List<Color>()
             {
@@ -65,52 +66,20 @@ namespace Planet_Generator
             return image;
         }
 
-        public static void DrawCloud(Bitmap origin)
-        {
-            Random r = new Random(DateTime.Now.Millisecond);
-            var xCoord = r.Next(0, origin.Width);
-            var yCoord = r.Next(0, origin.Height);
-
-            var xVector = r.Next(-1, 2);
-            var yVector = r.Next(-1, 2);
-
-            var drag = 10;
-            var brushSpread = 5;
-
-            using (Graphics graph = Graphics.FromImage(origin))
-            {
-                for (int i = 0; i < drag; i++)
-                {
-                    xCoord += xVector;
-                    yCoord += yVector;
-
-                    for (int x = 0; x < brushSpread; x++)
-                    {
-                        var brushWidth = r.Next(1, 10);
-                        var brushHeight = r.Next(1, 10);
-                        var jitter = r.Next(-2, 3);
-
-                        Rectangle rectangle = new Rectangle(xCoord + jitter, yCoord + jitter, brushWidth, brushHeight);
-                        graph.FillEllipse(Brushes.White, rectangle);
-                    }
-                }
-            }
-
-        }
-
         public static Bitmap GeneratePlanet(int resolution)
         {
             var image = GetTemplateBitmapTransparent(resolution, resolution);
             var heightMap = GenerateHeightMapDiamondSquareAlgo(resolution);
 
-            for (int i = 0; i < 12; i++)
-            {
-               heightMap = SmoothHeightMap(heightMap);
-            }
 
             AddContinents(heightMap, 12, resolution / 3, 200);
 
             AddContinents(heightMap, 12, resolution / 3, -200);
+
+            for (int i = 0; i < 12; i++)
+            {
+               heightMap = SmoothHeightMap(heightMap);
+            }
 
             List<Color> colors = new List<Color>()
             {
@@ -122,10 +91,16 @@ namespace Planet_Generator
                 Color.Green,
                 Color.YellowGreen,
                 Color.DarkOliveGreen,
-                Color.DarkGray
+                Color.DarkGray,
+                Color.White
             };
 
             GenerateColorMap(heightMap, image, colors);
+
+            for (int i = 0; i < 5; i++)
+            {
+                SmoothColors(image);
+            }
 
             return OverlayImage(image, GenerateClouds(resolution), 0, 0, 0.75f);
 
