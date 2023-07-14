@@ -78,7 +78,7 @@ namespace Planet_Generator
             return bmp;
         }
 
-        public static Bitmap GeneratePlanet(int resolution)
+        public static Bitmap GeneratePlanet(int resolution, int atmosphereThickness)
         {
             var image = GetTemplateBitmapTransparent(resolution, resolution);
             var heightMap = GenerateHeightMapDiamondSquareAlgo(resolution);
@@ -114,8 +114,6 @@ namespace Planet_Generator
             {
                 SmoothColors(image);
             }
-
-            int atmosphereThickness = 4;
 
             var planet = OverlayImage(image, GenerateClouds(resolution), 0, 0, 0.75f);
 

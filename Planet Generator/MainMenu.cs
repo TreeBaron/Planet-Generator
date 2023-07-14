@@ -30,7 +30,18 @@ namespace Planet_Generator
                 return;
             }
 
-            PictureBox.Image = (Image)TextureGen.GeneratePlanet(resolution);
+            int atmosphereThickness = -1;
+            try
+            {
+                atmosphereThickness = Convert.ToInt32(AtmosphereTextBox.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Enter a valid atmosphere thickness.");
+                return;
+            }
+
+            PictureBox.Image = (Image)TextureGen.GeneratePlanet(resolution, atmosphereThickness);
             PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
         }
     }
