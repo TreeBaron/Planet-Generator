@@ -24,6 +24,8 @@ namespace Planet_Generator
 
         public int CloudSmoothAmount { get; set; }
 
+        public int CloudBoost { get; set; }
+
         #region Earth Settings
 
         public static Settings GetEarthSettings(int resolution)
@@ -32,17 +34,20 @@ namespace Planet_Generator
             settings.Resolution = resolution;
             settings.AtmosphereThickness = 4;
             settings.GenerateClouds = true;
-            settings.CloudColors = Settings.GetEarthCloudColors();
             settings.PlanetColors = Settings.GetEarthPlanetColors();
-            settings.CloudContinentCount = 12;
+
+            settings.CloudColors = Settings.GetEarthCloudColors();
+            settings.CloudContinentCount = 400;
+            settings.CloudContinentRadius = 20;
+            settings.CloudBoost = 800;
+            settings.CloudSmoothHeightMap = 6;
+            settings.CloudSmoothAmount = 1;
+
             settings.ContinentCount = 12;
             settings.ContinentRadius = settings.Resolution / 3;
-            settings.CloudContinentRadius = settings.Resolution / 3;
             settings.ContinentBoost = 150;
-            settings.CloudSmoothHeightMap = 12;
             settings.SmoothHeightMapAmount = 12;
-            settings.SmoothTextureAmount = 5;
-            settings.CloudSmoothAmount = 5;
+            settings.SmoothTextureAmount = 0;
             settings.ExpandColors = 1;
 
             return settings;
@@ -52,16 +57,20 @@ namespace Planet_Generator
         {
             return new List<Color>()
             {
+                Color.DarkBlue,
                 Color.Blue,
-                Color.LightBlue,
-                Color.SkyBlue,
+                Color.CornflowerBlue,
                 Color.Tan,
                 Color.DarkKhaki,
-                Color.YellowGreen,
+                Color.Green,
+                Color.Green,
                 Color.Green,
                 Color.DarkOliveGreen,
                 Color.DarkOliveGreen,
+                Color.DarkOliveGreen,
+                Color.DarkOliveGreen,
                 Color.DarkGray,
+                Color.LightGray,
                 Color.White
             };
         }

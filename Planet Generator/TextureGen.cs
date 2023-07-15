@@ -2,29 +2,20 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace Planet_Generator
 {
-    class TextureGen
+    internal class TextureGen
     {
         public static Bitmap GenerateClouds(Settings settings)
         {
             var image = GetTemplateBitmapTransparent(settings.Resolution, settings.Resolution);
             var heightMap = GenerateHeightMapDiamondSquareAlgo(settings.Resolution);
 
+            AddContinents(heightMap, settings.CloudContinentCount, settings.CloudContinentRadius, settings.CloudBoost);
 
-            AddContinents(heightMap, settings.CloudContinentCount, settings.CloudContinentRadius, 200);
-
-            AddContinents(heightMap, settings.CloudContinentCount, settings.CloudContinentRadius, -200);
+            AddContinents(heightMap, settings.CloudContinentCount, settings.CloudContinentRadius, settings.CloudBoost*-1);
 
             for (int i = 0; i < settings.CloudSmoothHeightMap; i++)
             {
@@ -33,7 +24,7 @@ namespace Planet_Generator
 
             List<Color> colors = Settings.GetEarthCloudColors();
 
-            GenerateColorMap(heightMap, image, colors);
+            GenerateColorMap(heightMap, image, colors, settings.ExpandColors);
 
             for (int i = 0; i < settings.CloudSmoothAmount; i++)
             {
@@ -41,6 +32,11 @@ namespace Planet_Generator
             }
 
             return image;
+        }
+
+        private static void AddContinents(int[,] heightMap, int cloudContinentCount, int cloudContinentRadius, object cloudBoost)
+        {
+            throw new NotImplementedException();
         }
 
         public static Bitmap GenerateAtmosphere(int resolution, Color color)
@@ -60,19 +56,18 @@ namespace Planet_Generator
             var image = GetTemplateBitmapTransparent(settings.Resolution, settings.Resolution);
             var heightMap = GenerateHeightMapDiamondSquareAlgo(settings.Resolution);
 
-
             AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, settings.ContinentBoost);
 
-            AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, -1*settings.ContinentBoost);
+            AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, -1 * settings.ContinentBoost);
 
             for (int i = 0; i < settings.SmoothHeightMapAmount; i++)
             {
-               heightMap = SmoothHeightMap(heightMap);
+                heightMap = SmoothHeightMap(heightMap);
             }
 
             List<Color> colors = settings.PlanetColors;
 
-            GenerateColorMap(heightMap, image, colors, 4);
+            GenerateColorMap(heightMap, image, colors, settings.ExpandColors);
 
             for (int i = 0; i < settings.SmoothTextureAmount; i++)
             {
@@ -89,7 +84,7 @@ namespace Planet_Generator
             planet = CutOutHole(image, settings.Resolution);
 
             // make final canvas that is larger by the thickness of the atmosphere
-            var canvas = GetTemplateBitmapTransparent(settings.Resolution + (settings.AtmosphereThickness*2), settings.Resolution + (settings.AtmosphereThickness*2));
+            var canvas = GetTemplateBitmapTransparent(settings.Resolution + (settings.AtmosphereThickness * 2), settings.Resolution + (settings.AtmosphereThickness * 2));
             var atmosphere = GenerateAtmosphere(settings.Resolution + settings.AtmosphereThickness, Color.CornflowerBlue);
 
             // place planet on canvas
@@ -97,18 +92,17 @@ namespace Planet_Generator
 
             // place atmosphere on canvas, over the planet
             return OverlayImage(atmosphere, canvasAndPlanet, 0, 0, 1.0f);
-
         }
 
         private static Bitmap CutOutHole(Bitmap image, int resolution)
         {
             Bitmap finalImage = GetTemplateBitmapTransparent(resolution, resolution);
 
-            for(int y = 0; y < resolution; y++)
+            for (int y = 0; y < resolution; y++)
             {
-                for(int x = 0; x < resolution; x++)
+                for (int x = 0; x < resolution; x++)
                 {
-                    if(GetDistance(x, y, resolution / 2, resolution / 2) < resolution / 2)
+                    if (GetDistance(x, y, resolution / 2, resolution / 2) < resolution / 2)
                     {
                         finalImage.SetPixel(x, y, image.GetPixel(x, y));
                     }
@@ -121,16 +115,15 @@ namespace Planet_Generator
         private static int[,] MergeHeightMaps(int[,] noiseHeightMap, int[,] heightMap)
         {
             var newMap = new int[noiseHeightMap.GetLength(0), noiseHeightMap.GetLength(1)];
-            for(int x = 0; x < noiseHeightMap.GetLength(0); x++)
+            for (int x = 0; x < noiseHeightMap.GetLength(0); x++)
             {
-                for(int y = 0; y < noiseHeightMap.GetLength(1); y++)
+                for (int y = 0; y < noiseHeightMap.GetLength(1); y++)
                 {
-                    newMap[x,y] = (noiseHeightMap[x, y] + heightMap[x, y]) / 2;
+                    newMap[x, y] = (noiseHeightMap[x, y] + heightMap[x, y]) / 2;
                 }
             }
             return newMap;
         }
-
 
         /// <summary>
         /// Special thinks to: https://stackoverflow.com/questions/33284841/place-image-over-image-in-c-sharp-using-specific-alpha-transparency-level
@@ -176,14 +169,14 @@ namespace Planet_Generator
             Random r = new Random(DateTime.Now.Millisecond);
             for (int i = 0; i < amount; i++)
             {
-                var x = r.Next(0, heightMap.GetLength(0)-1);
-                var y = r.Next(0, heightMap.GetLength(1)-1);
+                var x = r.Next(0, heightMap.GetLength(0) - 1);
+                var y = r.Next(0, heightMap.GetLength(1) - 1);
                 circles.Add((x, y));
             }
 
-            for(int x = 0; x < heightMap.GetLength(0); x++)
+            for (int x = 0; x < heightMap.GetLength(0); x++)
             {
-                for(int y = 0; y < heightMap.GetLength(1); y++)
+                for (int y = 0; y < heightMap.GetLength(1); y++)
                 {
                     foreach (var point in circles)
                     {
@@ -207,9 +200,9 @@ namespace Planet_Generator
         private static void AddShadeNoise(Bitmap scaledUp, int amount)
         {
             Random r = new Random();
-            for(int x = 0; x < scaledUp.Width; x++)
+            for (int x = 0; x < scaledUp.Width; x++)
             {
-                for(int y = 0; y < scaledUp.Height; y++)
+                for (int y = 0; y < scaledUp.Height; y++)
                 {
                     try
                     {
@@ -218,22 +211,23 @@ namespace Planet_Generator
                         var ran2 = r.Next(-1 * amount, amount);
                         var ran3 = r.Next(-1 * amount, amount);
                         scaledUp.SetPixel(x, y, Color.FromArgb(pixel.R + ran1, pixel.G + ran2, pixel.B + ran3));
-                    } catch {}
+                    }
+                    catch { }
                 }
             }
         }
 
         private static Bitmap SmartScale(Bitmap original, int scale, int fill = 50)
         {
-            var template = GetTemplateBitmapTransparent(original.Width * scale, original.Height* scale);
+            var template = GetTemplateBitmapTransparent(original.Width * scale, original.Height * scale);
             var scaleAdjust = scale + 3;
 
             Random r = new Random(DateTime.Now.Millisecond);
             using (Graphics graph = Graphics.FromImage(template))
             {
-                for(int x = 0; x < original.Width; x++)
+                for (int x = 0; x < original.Width; x++)
                 {
-                    for(int y = 0; y < original.Height; y++)
+                    for (int y = 0; y < original.Height; y++)
                     {
                         var pixel = original.GetPixel(x, y);
                         using (SolidBrush brush = new SolidBrush(pixel))
@@ -242,13 +236,12 @@ namespace Planet_Generator
                             // graph.FillRectangle(brush, rectangle);
                             for (int i = 0; i < fill; i++)
                             {
-                                Rectangle rectangle = new Rectangle((x*scaleAdjust) + r.Next(-scaleAdjust, scaleAdjust), (y*scaleAdjust) + r.Next(-scaleAdjust, scaleAdjust), r.Next(1, scaleAdjust), r.Next(1, scaleAdjust));
+                                Rectangle rectangle = new Rectangle((x * scaleAdjust) + r.Next(-scaleAdjust, scaleAdjust), (y * scaleAdjust) + r.Next(-scaleAdjust, scaleAdjust), r.Next(1, scaleAdjust), r.Next(1, scaleAdjust));
                                 graph.FillEllipse(brush, rectangle);
                             }
                         }
                     }
                 }
-
             }
 
             return template;
@@ -256,12 +249,12 @@ namespace Planet_Generator
 
         private static int[,] RaiseHeightMap(int[,] heightMap, int amount)
         {
-            for(int x = 0; x < heightMap.GetLength(0); x++)
+            for (int x = 0; x < heightMap.GetLength(0); x++)
             {
-                for(int y = 0; y < heightMap.GetLength(1); y++)
+                for (int y = 0; y < heightMap.GetLength(1); y++)
                 {
                     heightMap[x, y] += amount;
-                    heightMap[x, y] = Math.Min(255*3, heightMap[x, y]);
+                    heightMap[x, y] = Math.Min(255 * 3, heightMap[x, y]);
                 }
             }
 
@@ -270,53 +263,75 @@ namespace Planet_Generator
 
         private static void SmoothColors(Bitmap map)
         {
-            for (int x = 1; x < map.Width-1; x++)
+            for (int x = 1; x < map.Width - 1; x++)
             {
-                for (int y = 1; y < map.Height-1; y++)
+                for (int y = 1; y < map.Height - 1; y++)
                 {
                     var value = map.GetPixel(x, y);
-                    var up = map.GetPixel(x, y +1);
-                    var down = map.GetPixel(x, y -1);
+                    var up = map.GetPixel(x, y + 1);
+                    var down = map.GetPixel(x, y - 1);
                     var left = map.GetPixel(x - 1, y);
                     var right = map.GetPixel(x + 1, y);
-                    var smoothed = MergePixels(right,MergePixels(up, MergePixels(MergePixels(down, value), left)));
+                    var smoothed = MergePixels(right, MergePixels(up, MergePixels(MergePixels(down, value), left)));
                     map.SetPixel(x, y, smoothed);
                 }
             }
         }
 
-        private static List<Color> ExpandColors(List<Color> colors)
+        private static List<List<Color>> ExpandColors(List<Color> colors)
         {
-            var newColors = new List<Color>();
+            var newColors = new List<List<Color>>();
 
-            for(int i = 1; i < colors.Count; i++)
+            for (int i = 0; i < colors.Count; i++)
             {
-                newColors.Add(colors[i-1]);
-                newColors.Add(MergePixels(colors[i - 1], colors[i]));
+                var list = new List<Color>();
+                newColors.Add(list);
+                list.Add(colors[i]);
+
+                for (int x = 0; x < 50; x++)
+                {
+                    list.Add(RandomColorAdjust(colors[i]));
+                }    
             }
 
             return newColors;
         }
 
-        private static void GenerateColorMap(int[,] heightMap, Bitmap origin, List<Color> colors, int colorExpansionAmount = 1)
+        private static Color RandomColorAdjust(Color color)
         {
-            
-            for(int i = 0; i < colorExpansionAmount; i++)
+            try
             {
-                colors = ExpandColors(colors);
+                Random r = new Random(DateTime.Now.Millisecond);
+                int min = -15;
+                int max = (min*-1)+1;
+                return Color.FromArgb(color.A, color.R + r.Next(min,max), color.G + r.Next(min, max), color.B + r.Next(min, max));
+            }
+            catch(Exception) 
+            {
+                return color;
+            }
+        }
+
+        private static void GenerateColorMap(int[,] heightMap, Bitmap origin, List<Color> colors, int colorExpansionAmount)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            var rangedColors = new List<List<Color>>();
+            for (int i = 0; i < colorExpansionAmount; i++)
+            {
+                rangedColors = ExpandColors(colors);
             }
 
             for (int x = 0; x < origin.Width; x++)
             {
                 for (int y = 0; y < origin.Height; y++)
                 {
-                    var divisor = (255*3) / colors.Count;
-                    var total = heightMap[x,y];
+                    double divisor = (255.0 * 3.0) / (colors.Count-1);
+                    var total = heightMap[x, y];
                     total = Math.Max(1, total);
-                    var selectPosition = (total / divisor) - 1;
+                    var selectPosition = (int)(total / divisor) - 1;
                     selectPosition = Math.Max(0, selectPosition);
-                    selectPosition = Math.Min(colors.Count-1, selectPosition);
-                    var color = colors[selectPosition];
+                    selectPosition = Math.Min(rangedColors.Count - 1, selectPosition);
+                    var color = rangedColors[selectPosition][r.Next(0, rangedColors[selectPosition].Count-1)];
                     origin.SetPixel(x, y, color);
                 }
             }
@@ -324,10 +339,10 @@ namespace Planet_Generator
 
         private static int[,] SmoothHeightMap(int[,] map)
         {
-            var newMap = new int[map.GetLength(0),map.GetLength(1)];
-            for(int x = 1; x < map.GetLength(0) - 1; x++)
+            var newMap = new int[map.GetLength(0), map.GetLength(1)];
+            for (int x = 1; x < map.GetLength(0) - 1; x++)
             {
-                for(int y = 1; y < map.GetLength(1) - 1; y++)
+                for (int y = 1; y < map.GetLength(1) - 1; y++)
                 {
                     var value = map[x, y];
                     var up = map[x, y + 1];
@@ -351,13 +366,13 @@ namespace Planet_Generator
             Random r = new Random(DateTime.Now.Millisecond);
             heightMap[0, 0] = r.Next(0, 255 * 3);
             heightMap[0, width - 1] = r.Next(0, 255 * 3);
-            heightMap[width-1, 0] = r.Next(0, 255 * 3);
-            heightMap[width-1, width - 1] = r.Next(0, 255 * 3);
+            heightMap[width - 1, 0] = r.Next(0, 255 * 3);
+            heightMap[width - 1, width - 1] = r.Next(0, 255 * 3);
 
             var chunkSize = width - 1;
             var roughness = 2.0;
 
-            while(chunkSize > 1)
+            while (chunkSize > 1)
             {
                 SquareStep(heightMap, width, chunkSize);
                 DiamondStep(heightMap, width, chunkSize);
@@ -377,14 +392,14 @@ namespace Planet_Generator
                 for (int x = 0; x < width - 1; x += chunkSize)
                 {
                     // check if we're done...
-                    if(y + half > width -1 || x + half > width - 1)
+                    if (y + half > width - 1 || x + half > width - 1)
                     {
                         return;
                     }
 
                     var values = GetSquareValues(heightMap, chunkSize, y, x);
                     var value = values.Sum() / values.Count;
-                    heightMap[y + half, x + half] = value + random.Next(-255*3, 255*3);
+                    heightMap[y + half, x + half] = value + random.Next(-255 * 3, 255 * 3);
                 }
             }
         }
@@ -395,11 +410,11 @@ namespace Planet_Generator
             var random = new Random(DateTime.Now.Millisecond);
             for (int y = 0; y < width - 1; y += half)
             {
-                for (int x = (y+half) % chunkSize; x < width - 1; x += chunkSize)
+                for (int x = (y + half) % chunkSize; x < width - 1; x += chunkSize)
                 {
                     var values = GetDiamondValues(heightMap, half, y, x);
                     var value = values.Sum() / values.Count;
-                    heightMap[y, x] = value + random.Next(-255*3, 255*3);
+                    heightMap[y, x] = value + random.Next(-255 * 3, 255 * 3);
                 }
             }
         }
@@ -441,7 +456,8 @@ namespace Planet_Generator
             try
             {
                 list.Add(heightMap[y - half, x]);
-            } catch { /* Just eat it... */ }
+            }
+            catch { /* Just eat it... */ }
 
             try
             {
@@ -467,12 +483,12 @@ namespace Planet_Generator
         private static Bitmap MergeMaps(Bitmap a, Bitmap b)
         {
             Random r = new Random();
-            for(int x = 0; x < a.Width; x++)
+            for (int x = 0; x < a.Width; x++)
             {
-                for(int y = 0 ; y < a.Height; y++)
+                for (int y = 0; y < a.Height; y++)
                 {
-                   var pixelA = a.GetPixel(x, y);
-                   var pixelB = b.GetPixel(x, y);
+                    var pixelA = a.GetPixel(x, y);
+                    var pixelB = b.GetPixel(x, y);
 
                     if (r.NextDouble() < 0.1)
                     {
