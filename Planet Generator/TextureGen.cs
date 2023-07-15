@@ -22,7 +22,7 @@ namespace Planet_Generator
                 heightMap = SmoothHeightMap(heightMap);
             }
 
-            List<Color> colors = Settings.GetEarthCloudColors();
+            List<Color> colors = settings.CloudColors;
 
             GenerateColorMap(heightMap, image, colors, settings.ExpandColors);
 
@@ -75,6 +75,8 @@ namespace Planet_Generator
             AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, settings.ContinentBoost);
 
             AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, -1 * settings.ContinentBoost);
+
+            heightMap = RaiseHeightMap(heightMap, settings.RaiseAllLandAmount);
 
             for (int i = 0; i < settings.SmoothHeightMapAmount; i++)
             {

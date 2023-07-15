@@ -31,6 +31,66 @@ namespace Planet_Generator
 
         public int CloudBoost { get; set; }
 
+        public int RaiseAllLandAmount { get; set; } = 0;
+
+        #region TOS Settings
+        public static Settings GetTOSSettings(int resolution)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            var settings = new Settings();
+            settings.AtmosphereColor = Color.Blue;
+            settings.Resolution = resolution;
+            settings.AtmosphereThickness = 4;
+            settings.AtmosphereTransparency = 0.5f;
+            settings.GenerateClouds = true;
+            settings.PlanetColors = Settings.GetTOSPlanetColors();
+
+            settings.CloudColors = Settings.GetTOSCloudColors();
+            settings.CloudContinentCount = 400;
+            settings.CloudContinentRadius = 20;
+            settings.CloudBoost = 800;
+            settings.CloudSmoothHeightMap = 6;
+            settings.CloudSmoothAmount = 1;
+
+            settings.ContinentCount = 12;
+            settings.ContinentRadius = 150;
+            settings.ContinentBoost = 350;
+            settings.SmoothHeightMapAmount = 12;
+            settings.SmoothTextureAmount = 0;
+            settings.ExpandColors = r.Next(1,3);
+
+            settings.RaiseAllLandAmount = r.Next(-100, 100);
+
+            return settings;
+        }
+
+        public static List<Color> GetTOSPlanetColors()
+        {
+            Random random = new Random();
+            return new List<Color>()
+            {
+                random.NextDouble() > 0.5 ? Color.DarkSeaGreen : Color.Blue,
+                Color.Tan,
+                Color.DarkKhaki,
+                random.Next() > 0.5 ? Color.Green : Color.Red,
+                random.Next() > 0.5 ? Color.DarkOliveGreen : Color.DarkRed,
+                Color.Gray,
+                Color.SlateGray,
+                Color.White
+            };
+        }
+
+        public static List<Color> GetTOSCloudColors()
+        {
+            Random random = new Random(DateTime.Now.Second);
+            return new List<Color>()
+            {
+                Color.Transparent,
+                random.NextDouble() > 0.5 ? random.NextDouble() > 0.5 ? Color.Purple : Color.White : Color.Yellow
+            };
+        }
+        #endregion
+
         #region Earth Settings
 
         public static Settings GetEarthSettings(int resolution)
@@ -62,9 +122,10 @@ namespace Planet_Generator
 
         public static List<Color> GetEarthPlanetColors()
         {
+            Random random = new Random();
             return new List<Color>()
             {
-                Color.DarkBlue,
+                random.NextDouble() > 0.5 ? Color.DarkBlue : Color.Blue,
                 Color.Blue,
                 Color.CornflowerBlue,
                 Color.Tan,
@@ -188,6 +249,7 @@ namespace Planet_Generator
             map.Add("Earth-Like", GetEarthSettings(resolution));
             map.Add("Moon", GetMoonSettings(resolution));
             map.Add("Third Impact", GetThirdImpactSettings(resolution));
+            map.Add("TOS Planet", GetTOSSettings(resolution));
             return map;
         }
 
