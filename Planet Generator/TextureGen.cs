@@ -39,7 +39,7 @@ namespace Planet_Generator
             throw new NotImplementedException();
         }
 
-        public static Bitmap GenerateAtmosphere(int resolution, Color color)
+        public static Bitmap GenerateAtmosphere(int resolution, Color color, Settings settings)
         {
             Bitmap bmp = new Bitmap(resolution, resolution);
             SolidBrush colorBrush = new SolidBrush(color);
@@ -48,7 +48,23 @@ namespace Planet_Generator
                 Rectangle rectangle = new Rectangle(0, 0, resolution, resolution);
                 graph.FillEllipse(colorBrush, rectangle);
             }
-            return bmp;
+            bmp = MakeSemiTransparent(settings, bmp);
+            return CutOutHole(bmp, resolution);
+        }
+
+        public static Bitmap MakeSemiTransparent(Settings settings, Bitmap origin)
+        {
+            for(int y = 0; y < origin.Height; y++)
+            {
+                for(int x = 0; x < origin.Width; x++)
+                {
+                    var pixel = origin.GetPixel(x, y);
+                    var newPixel = Color.FromArgb((int)(settings.AtmosphereTransparency * 255f), pixel.R, pixel.G, pixel.B);
+                    origin.SetPixel(x, y, newPixel);
+                }
+            }
+
+            return origin;
         }
 
         public static Bitmap GeneratePlanet(Settings settings)
@@ -78,14 +94,14 @@ namespace Planet_Generator
 
             if (settings.GenerateClouds)
             {
-                planet = OverlayImage(image, GenerateClouds(settings), 0, 0, 0.75f);
+                planet = OverlayImage(image, GenerateClouds(settings), 0, 0, settings.CloudTransparency);
             }
 
             planet = CutOutHole(image, settings.Resolution);
 
             // make final canvas that is larger by the thickness of the atmosphere
             var canvas = GetTemplateBitmapTransparent(settings.Resolution + (settings.AtmosphereThickness * 2), settings.Resolution + (settings.AtmosphereThickness * 2));
-            var atmosphere = GenerateAtmosphere(settings.Resolution + settings.AtmosphereThickness, Color.CornflowerBlue);
+            var atmosphere = GenerateAtmosphere(settings.Resolution + settings.AtmosphereThickness, settings.AtmosphereColor, settings);
 
             // place planet on canvas
             var canvasAndPlanet = OverlayImage(canvas, planet, settings.AtmosphereThickness / 2, settings.AtmosphereThickness / 2, 1.0f);

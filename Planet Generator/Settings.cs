@@ -5,6 +5,9 @@ namespace Planet_Generator
 {
     public class Settings
     {
+        public float CloudTransparency { get; set; } = 0.75f;
+        public Color AtmosphereColor { get; set; }
+        public float AtmosphereTransparency { get; set; } = 0.75f;
         public int Resolution { get; set; } = 400;
         public int AtmosphereThickness { get; set; } = 4;
         public bool GenerateClouds { get; set; } = true;
@@ -31,8 +34,10 @@ namespace Planet_Generator
         public static Settings GetEarthSettings(int resolution)
         {
             var settings = new Settings();
+            settings.AtmosphereColor = Color.Blue;
             settings.Resolution = resolution;
             settings.AtmosphereThickness = 4;
+            settings.AtmosphereTransparency = 0.5f;
             settings.GenerateClouds = true;
             settings.PlanetColors = Settings.GetEarthPlanetColors();
 
@@ -92,20 +97,27 @@ namespace Planet_Generator
         public static Settings GetThirdImpactSettings(int resolution)
         {
             var settings = new Settings();
+            settings.AtmosphereColor = Color.Red;
+            settings.AtmosphereTransparency = 0.5f;
             settings.Resolution = resolution;
             settings.AtmosphereThickness = 4;
             settings.GenerateClouds = true;
-            settings.CloudColors = Settings.GetEarthCloudColors();
             settings.PlanetColors = Settings.GetThirdImpactColors();
-            settings.CloudContinentCount = 24;
+            settings.CloudTransparency = 0.9f;
+
+            settings.CloudColors = Settings.GetEarthCloudColors();
+            settings.CloudContinentCount = 400;
+            settings.CloudContinentRadius = 20;
+            settings.CloudBoost = 800;
+            settings.CloudSmoothHeightMap = 6;
+            settings.CloudSmoothAmount = 1;
+
             settings.ContinentCount = 12;
             settings.ContinentRadius = settings.Resolution / 3;
-            settings.CloudContinentRadius = settings.Resolution / 3;
-            settings.ContinentBoost = 200;
-            settings.CloudSmoothHeightMap = 12;
+            settings.ContinentBoost = 150;
             settings.SmoothHeightMapAmount = 12;
-            settings.SmoothTextureAmount = 5;
-            settings.CloudSmoothAmount = 5;
+            settings.SmoothTextureAmount = 0;
+            settings.ExpandColors = 1;
 
             return settings;
         }
@@ -116,7 +128,7 @@ namespace Planet_Generator
             {
                 Color.Red,
                 Color.DarkRed,
-                Color.MediumVioletRed,
+                Color.Maroon,
                 Color.Tan,
                 Color.DarkKhaki,
                 Color.YellowGreen,
@@ -135,19 +147,21 @@ namespace Planet_Generator
         public static Settings GetMoonSettings(int resolution)
         {
             var settings = new Settings();
+            settings.AtmosphereColor = Color.Gray;
             settings.Resolution = resolution;
             settings.AtmosphereThickness = 0;
+            settings.AtmosphereTransparency = 0.0f;
             settings.GenerateClouds = false;
             settings.CloudColors = Settings.GetEarthCloudColors();
             settings.PlanetColors = Settings.GetMoonColors();
             settings.CloudContinentCount = 12;
-            settings.ContinentCount = 50;
-            settings.ContinentRadius = settings.Resolution / 3;
+            settings.ContinentCount = 150;
+            settings.ContinentRadius = 50;
             settings.CloudContinentRadius = settings.Resolution / 3;
-            settings.ContinentBoost = 300;
+            settings.ContinentBoost = 600;
             settings.CloudSmoothHeightMap = 12;
-            settings.SmoothHeightMapAmount = 12;
-            settings.SmoothTextureAmount = 5;
+            settings.SmoothHeightMapAmount = 2;
+            settings.SmoothTextureAmount = 1;
             settings.CloudSmoothAmount = 5;
 
             return settings;
@@ -160,6 +174,9 @@ namespace Planet_Generator
                 Color.Gray,
                 Color.DarkGray,
                 Color.LightGray,
+                Color.Gray,
+                Color.DarkGray,
+                Color.LightGray
             };
         }
 
