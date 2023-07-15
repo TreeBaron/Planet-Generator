@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,6 +7,8 @@ namespace Planet_Generator
 {
     public partial class MainMenu : Form
     {
+        Dictionary<string, Settings> SettingsDictionary;
+
         public MainMenu()
         {
             InitializeComponent();
@@ -37,7 +40,12 @@ namespace Planet_Generator
 
             var dynamicScale = Upscale.Checked;
 
-            var settings = Settings.GetEarthSettings(resolution);
+            // regen settings to avoid object ref problems since gen can change settings objects
+            SettingsDictionary = Settings.GetSettingsDictionary(resolution);
+
+            var settings = SettingsDictionary[(string)SettingsComboBox.SelectedItem];
+
+            settings.Resolution = resolution;
 
             settings.Upscale = dynamicScale;
 
@@ -50,7 +58,7 @@ namespace Planet_Generator
         private void SaveButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialogue = new SaveFileDialog();
-            saveFileDialogue.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Png Image|*.png";
+            saveFileDialogue.Filter = "Png Image|*.png|JPeg Image|*.jpg|Bitmap Image|*.bmp";
             saveFileDialogue.Title = "Save your Planet";
             saveFileDialogue.FileName = PlanetNameLabel.Text;
             saveFileDialogue.ShowDialog();
@@ -84,6 +92,28 @@ namespace Planet_Generator
 
                 fs.Close();
             }
+        }
+
+        private void MainMenu_Load(object sender, EventArgs e)
+        {
+            int resolution = -1;
+            try
+            {
+                resolution = Convert.ToInt32(ResolutionTextBox.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Enter a valid resolution.");
+                return;
+            }
+
+            SettingsDictionary = Settings.GetSettingsDictionary(resolution);
+
+            foreach(var key in SettingsDictionary.Keys)
+            {
+                SettingsComboBox.Items.Add(key);
+            }
+            SettingsComboBox.SelectedIndex = 0;
         }
     }
 }

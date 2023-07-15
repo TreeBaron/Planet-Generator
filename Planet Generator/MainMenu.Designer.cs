@@ -37,6 +37,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.AtmosphereTextBox = new System.Windows.Forms.TextBox();
             this.Upscale = new System.Windows.Forms.CheckBox();
+            this.SettingsComboBox = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -143,11 +145,33 @@
             this.Upscale.Text = "Dynamic Upscale Res";
             this.Upscale.UseVisualStyleBackColor = true;
             // 
+            // SettingsComboBox
+            // 
+            this.SettingsComboBox.FormattingEnabled = true;
+            this.SettingsComboBox.Location = new System.Drawing.Point(17, 827);
+            this.SettingsComboBox.Name = "SettingsComboBox";
+            this.SettingsComboBox.Size = new System.Drawing.Size(227, 33);
+            this.SettingsComboBox.TabIndex = 9;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 789);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(157, 25);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Planet Settings";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(834, 1062);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.SettingsComboBox);
             this.Controls.Add(this.Upscale);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.AtmosphereTextBox);
@@ -160,6 +184,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainMenu";
             this.Text = "Planet Generator - By John Dodd";
+            this.Load += new System.EventHandler(this.MainMenu_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -177,6 +202,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox AtmosphereTextBox;
         private System.Windows.Forms.CheckBox Upscale;
+        private System.Windows.Forms.ComboBox SettingsComboBox;
+        private System.Windows.Forms.Label label2;
     }
 }
 

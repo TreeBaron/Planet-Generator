@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Planet_Generator
@@ -50,8 +51,8 @@ namespace Planet_Generator
             settings.CloudSmoothAmount = 1;
 
             settings.ContinentCount = 12;
-            settings.ContinentRadius = settings.Resolution / 3;
-            settings.ContinentBoost = 150;
+            settings.ContinentRadius = 150;
+            settings.ContinentBoost = 350;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
             settings.ExpandColors = 1;
@@ -114,7 +115,7 @@ namespace Planet_Generator
             settings.CloudSmoothAmount = 1;
 
             settings.ContinentCount = 12;
-            settings.ContinentRadius = settings.Resolution / 3;
+            settings.ContinentRadius = 145;
             settings.ContinentBoost = 150;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
@@ -158,7 +159,7 @@ namespace Planet_Generator
             settings.CloudContinentCount = 12;
             settings.ContinentCount = 150;
             settings.ContinentRadius = 50;
-            settings.CloudContinentRadius = settings.Resolution / 3;
+            settings.CloudContinentRadius = 150;
             settings.ContinentBoost = 600;
             settings.CloudSmoothHeightMap = 12;
             settings.SmoothHeightMapAmount = 2;
@@ -179,6 +180,15 @@ namespace Planet_Generator
                 Color.DarkGray,
                 Color.LightGray
             };
+        }
+
+        public static Dictionary<string, Settings> GetSettingsDictionary(int resolution)
+        {
+            var map = new Dictionary<string, Settings>();
+            map.Add("Earth-Like", GetEarthSettings(resolution));
+            map.Add("Moon", GetMoonSettings(resolution));
+            map.Add("Third Impact", GetThirdImpactSettings(resolution));
+            return map;
         }
 
         #endregion Moon Settings
