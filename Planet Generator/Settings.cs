@@ -5,6 +5,7 @@ namespace Planet_Generator
 {
     public class Settings
     {
+        public bool Upscale { get; set; }
         public float CloudTransparency { get; set; } = 0.75f;
         public Color AtmosphereColor { get; set; }
         public float AtmosphereTransparency { get; set; } = 0.75f;

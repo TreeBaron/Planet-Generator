@@ -97,6 +97,19 @@ namespace Planet_Generator
                 planet = OverlayImage(image, GenerateClouds(settings), 0, 0, settings.CloudTransparency);
             }
 
+            if (settings.Upscale)
+            {
+                var upscaled = SmartScale(image, 4);
+                settings.Resolution *= 4;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    SmoothColors(upscaled);
+                }
+
+                image = upscaled;
+            }
+
             planet = CutOutHole(image, settings.Resolution);
 
             // make final canvas that is larger by the thickness of the atmosphere
@@ -107,7 +120,10 @@ namespace Planet_Generator
             var canvasAndPlanet = OverlayImage(canvas, planet, settings.AtmosphereThickness / 2, settings.AtmosphereThickness / 2, 1.0f);
 
             // place atmosphere on canvas, over the planet
-            return OverlayImage(atmosphere, canvasAndPlanet, 0, 0, 1.0f);
+            var final =  OverlayImage(atmosphere, canvasAndPlanet, 0, 0, 1.0f);
+
+
+            return final;
         }
 
         private static Bitmap CutOutHole(Bitmap image, int resolution)
@@ -235,30 +251,7 @@ namespace Planet_Generator
 
         private static Bitmap SmartScale(Bitmap original, int scale, int fill = 50)
         {
-            var template = GetTemplateBitmapTransparent(original.Width * scale, original.Height * scale);
-            var scaleAdjust = scale + 3;
-
-            Random r = new Random(DateTime.Now.Millisecond);
-            using (Graphics graph = Graphics.FromImage(template))
-            {
-                for (int x = 0; x < original.Width; x++)
-                {
-                    for (int y = 0; y < original.Height; y++)
-                    {
-                        var pixel = original.GetPixel(x, y);
-                        using (SolidBrush brush = new SolidBrush(pixel))
-                        {
-                            // Rectangle rectangle = new Rectangle(x* scaleAdjust, y* scaleAdjust, scaleAdjust, scaleAdjust);
-                            // graph.FillRectangle(brush, rectangle);
-                            for (int i = 0; i < fill; i++)
-                            {
-                                Rectangle rectangle = new Rectangle((x * scaleAdjust) + r.Next(-scaleAdjust, scaleAdjust), (y * scaleAdjust) + r.Next(-scaleAdjust, scaleAdjust), r.Next(1, scaleAdjust), r.Next(1, scaleAdjust));
-                                graph.FillEllipse(brush, rectangle);
-                            }
-                        }
-                    }
-                }
-            }
+            var template = new Bitmap(original, new Size(original.Width*scale, original.Height*scale));
 
             return template;
         }
