@@ -78,9 +78,15 @@ namespace Planet_Generator
 
             heightMap = RaiseHeightMap(heightMap, settings.RaiseAllLandAmount);
 
+
             for (int i = 0; i < settings.SmoothHeightMapAmount; i++)
             {
                 heightMap = SmoothHeightMap(heightMap);
+            }
+
+            if (settings.AddCraters)
+            {
+                AddCraters(settings, heightMap);
             }
 
             List<Color> colors = settings.PlanetColors;
@@ -126,6 +132,32 @@ namespace Planet_Generator
 
 
             return final;
+        }
+
+        private static void AddCraters(Settings settings, int[,] heightMap)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            for(int i = 0; i < settings.CraterCount; i++)
+            {
+                var outterRadius = r.Next(10, 30);
+                var innerRadius = outterRadius - (outterRadius / 10);
+                var posX = r.Next(0, heightMap.GetLength(0)-1);
+                var posY = r.Next(0, heightMap.GetLength(1)-1);
+
+                AddDepression(heightMap, outterRadius, settings.CraterDepth, posX, posY);
+                AddDepression(heightMap, innerRadius, settings.CraterDepth*-2, posX, posY);
+            }
+
+            for (int i = 0; i < settings.CraterCount; i++)
+            {
+                var outterRadius = r.Next(2, 9);
+                var innerRadius = outterRadius - (outterRadius / 5);
+                var posX = r.Next(0, heightMap.GetLength(0) - 1);
+                var posY = r.Next(0, heightMap.GetLength(1) - 1);
+
+                AddDepression(heightMap, outterRadius, settings.CraterDepth, posX, posY);
+                AddDepression(heightMap, innerRadius, settings.CraterDepth * -2, posX, posY);
+            }
         }
 
         private static Bitmap CutOutHole(Bitmap image, int resolution)
@@ -218,6 +250,28 @@ namespace Planet_Generator
                         {
                             var multiplier = 1.0 / radius;
                             var distance = GetDistance(x, y, point.Item1, point.Item2);
+                            var finalMultiplier = 1.0 - multiplier;
+                            heightMap[x, y] += (int)(heightAdjust * finalMultiplier);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void AddDepression(int[,] heightMap, int radius, int heightAdjust, int xPos, int yPos)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+
+            for (int x = 0; x < heightMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < heightMap.GetLength(1); y++)
+                {
+                    if (GetDistance(x, y, xPos, yPos) < radius)
+                    {
+                        if (r.NextDouble() < 0.9)
+                        {
+                            var multiplier = 1.0 / radius;
+                            var distance = GetDistance(x, y, xPos, yPos);
                             var finalMultiplier = 1.0 - multiplier;
                             heightMap[x, y] += (int)(heightAdjust * finalMultiplier);
                         }

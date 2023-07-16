@@ -147,6 +147,7 @@
             // 
             // SettingsComboBox
             // 
+            this.SettingsComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SettingsComboBox.FormattingEnabled = true;
             this.SettingsComboBox.Location = new System.Drawing.Point(17, 827);
             this.SettingsComboBox.Name = "SettingsComboBox";

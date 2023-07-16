@@ -33,6 +33,12 @@ namespace Planet_Generator
 
         public int RaiseAllLandAmount { get; set; } = 0;
 
+        public bool AddCraters { get; set; } = false;
+
+        public int CraterDepth { get; set; } = 150;
+
+        public int CraterCount { get; set; } = 25;
+
         #region TOS Settings
         public static Settings GetTOSSettings(int resolution)
         {
@@ -226,6 +232,9 @@ namespace Planet_Generator
             settings.SmoothHeightMapAmount = 2;
             settings.SmoothTextureAmount = 1;
             settings.CloudSmoothAmount = 5;
+            settings.AddCraters = true;
+            settings.CraterCount = 6;
+            settings.CraterDepth = 1200;
 
             return settings;
         }
