@@ -1,0 +1,13 @@
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\bin\Release\completed.wav
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\bin\Release\planetIcon.ico
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\bin\Release\Planet Generator.exe.config
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\bin\Release\Planet Generator.exe
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\bin\Release\Planet Generator.pdb
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet Generator.csproj.AssemblyReference.cache
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet Generator.csproj.SuggestedBindingRedirects.cache
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet_Generator.MainMenu.resources
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet_Generator.Properties.Resources.resources
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet Generator.csproj.GenerateResource.cache
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet Generator.csproj.CoreCompileInputs.cache
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet Generator.exe
+C:\Users\Syndrome\Documents\Computer Programs\Planet Generator\Planet Generator\obj\Release\Planet Generator.pdb
