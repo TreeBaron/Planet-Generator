@@ -290,8 +290,12 @@ namespace Planet_Generator
             planetColors.AddRange(SampleImage(image, 24));
 
             settings.PlanetColors = planetColors;
-            settings.ContinentBoost = 150;
-            settings.ContinentHinder = r.Next(-50, -5);
+
+            if (r.NextDouble() < 0.5)
+            {
+                settings.ContinentBoost = 150;
+                settings.ContinentHinder = r.Next(-150, -5);
+            }
 
             return settings;
         }
