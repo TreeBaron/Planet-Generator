@@ -125,7 +125,7 @@ namespace Planet_Generator
             settings.ContinentHinder = -350;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
-            settings.ExpandColors = 1;
+            settings.ExpandColors = 0;
 
             return settings;
         }
