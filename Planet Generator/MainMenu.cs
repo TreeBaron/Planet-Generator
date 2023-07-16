@@ -18,6 +18,7 @@ namespace Planet_Generator
 
         private void GenerateTextureButton_Click(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Minimized;
             int resolution = -1;
             try
             {
@@ -60,44 +61,53 @@ namespace Planet_Generator
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"completed.wav");
             System.Media.SoundPlayer player = new System.Media.SoundPlayer(path);
             player.Play();
+
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialogue = new SaveFileDialog();
-            saveFileDialogue.Filter = "Png Image|*.png|JPeg Image|*.jpg|Bitmap Image|*.bmp";
-            saveFileDialogue.Title = "Save your Planet";
-            saveFileDialogue.FileName = PlanetNameLabel.Text;
-            saveFileDialogue.ShowDialog();
-
-            // If the file name is not an empty string open it for saving.
-            if (saveFileDialogue.FileName != "")
+            if (PictureBox.Image != null)
             {
-                // Saves the Image via a FileStream created by the OpenFile method.
-                System.IO.FileStream fs =
-                    (System.IO.FileStream)saveFileDialogue.OpenFile();
-                // Saves the Image in the appropriate ImageFormat based upon the
-                // File type selected in the dialog box.
-                // NOTE that the FilterIndex property is one-based.
-                switch (saveFileDialogue.FilterIndex)
+                SaveFileDialog saveFileDialogue = new SaveFileDialog();
+                saveFileDialogue.Filter = "Png Image|*.png|JPeg Image|*.jpg|Bitmap Image|*.bmp";
+                saveFileDialogue.Title = "Save your Planet";
+                saveFileDialogue.FileName = PlanetNameLabel.Text;
+                saveFileDialogue.ShowDialog();
+
+                // If the file name is not an empty string open it for saving.
+                if (saveFileDialogue.FileName != "")
                 {
-                    case 1:
-                        PictureBox.Image.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Jpeg);
-                        break;
+                    // Saves the Image via a FileStream created by the OpenFile method.
+                    System.IO.FileStream fs =
+                        (System.IO.FileStream)saveFileDialogue.OpenFile();
+                    // Saves the Image in the appropriate ImageFormat based upon the
+                    // File type selected in the dialog box.
+                    // NOTE that the FilterIndex property is one-based.
+                    switch (saveFileDialogue.FilterIndex)
+                    {
+                        case 1:
+                            PictureBox.Image.Save(fs,
+                              System.Drawing.Imaging.ImageFormat.Jpeg);
+                            break;
 
-                    case 2:
-                        PictureBox.Image.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Bmp);
-                        break;
+                        case 2:
+                            PictureBox.Image.Save(fs,
+                              System.Drawing.Imaging.ImageFormat.Bmp);
+                            break;
 
-                    case 3:
-                        PictureBox.Image.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Png);
-                        break;
+                        case 3:
+                            PictureBox.Image.Save(fs,
+                              System.Drawing.Imaging.ImageFormat.Png);
+                            break;
+                    }
+
+                    fs.Close();
                 }
-
-                fs.Close();
+            }
+            else
+            {
+                MessageBox.Show("You must first generate an image before you can save it.");
             }
         }
 
