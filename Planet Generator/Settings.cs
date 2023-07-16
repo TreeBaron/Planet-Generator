@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Planet_Generator
 {
@@ -63,7 +64,7 @@ namespace Planet_Generator
             settings.ContinentBoost = 350;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
-            settings.ExpandColors = r.Next(1,3);
+            settings.ExpandColors = r.Next(1, 3);
 
             settings.RaiseAllLandAmount = r.Next(-100, 100);
 
@@ -263,5 +264,62 @@ namespace Planet_Generator
         }
 
         #endregion Moon Settings
+
+        #region From Image Settings
+        public static Settings GetSettingsFromImage(int resolution, Bitmap image)
+        {
+            var scaledImage = new Bitmap(image, new Size(5, 5));
+
+            Random r = new Random(DateTime.Now.Millisecond);
+            var allSettings = GetSettingsDictionary(resolution);
+            var allKeys = allSettings.Keys.ToList();
+            var settings = allSettings[allKeys[r.Next(0,allKeys.Count-1)]];
+
+            settings = GetTOSSettings(resolution);
+
+            settings.AtmosphereColor = SampleImage(image, 1).First();
+            settings.AddCraters = r.NextDouble() > 0.5 ? true : false;
+            settings.GenerateClouds = r.NextDouble() > 0.5 ? true : false;
+            settings.AtmosphereThickness = r.Next(1, 4);
+            settings.Resolution = resolution;
+            settings.CloudColors = SampleImage(image, 2);
+            settings.PlanetColors = GetColors(scaledImage);
+            settings.SmoothHeightMapAmount = 1;
+
+            return settings;
+        }
+
+        private static List<Color> SampleImage(Bitmap bitmap, int amount)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            var list = new List<Color>();
+            for(int i = 0; i < amount; i++)
+            {
+                var pixel = bitmap.GetPixel(r.Next(0, bitmap.Width-1), r.Next(0, bitmap.Height-1));
+                list.Add(pixel);
+            }
+
+            return list;
+        }
+
+        private static List<Color> GetColors(Bitmap image)
+        {
+            Random r = new Random();
+            var colors = new List<Color>();
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    var pixel = image.GetPixel(x, y);
+                    colors.Add(pixel);
+                }
+            }
+
+            colors = colors.OrderBy(x => r.NextDouble()).ToList();
+
+            return colors;
+        }
+
+        #endregion
     }
 }

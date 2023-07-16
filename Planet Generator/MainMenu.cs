@@ -127,5 +127,77 @@ namespace Planet_Generator
         {
             MessageBox.Show("Created By John Dodd\nSound Effects By Kenneth Cooney");
         }
+
+        private void ImageLoadButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var openFileDialog = new OpenFileDialog();
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    var filePath = openFileDialog.FileName;
+
+                    var bitmap = new Bitmap(filePath);
+
+                    PictureBox.Image = bitmap;
+
+                    PictureBox.Refresh();
+
+                    int resolution = -1;
+                    try
+                    {
+                        resolution = Convert.ToInt32(ResolutionTextBox.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Enter a valid resolution.");
+                        return;
+                    }
+
+                    int atmosphereThickness = -1;
+                    try
+                    {
+                        atmosphereThickness = Convert.ToInt32(AtmosphereTextBox.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Enter a valid atmosphere thickness.");
+                        return;
+                    }
+
+                    var dynamicScale = Upscale.Checked;
+
+                    // regen settings to avoid object ref problems since gen can change settings objects
+                    SettingsDictionary = Settings.GetSettingsDictionary(resolution);
+
+                    var settings = Settings.GetSettingsFromImage(resolution, bitmap);
+
+                    settings.Resolution = resolution;
+
+                    settings.Upscale = dynamicScale;
+
+                    settings.AtmosphereThickness = atmosphereThickness;
+
+                    PictureBox.Image = (Image)TextureGen.GeneratePlanet(settings);
+                    PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
+
+
+                    string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"completed.wav");
+                    System.Media.SoundPlayer player = new System.Media.SoundPlayer(path);
+                    player.Play();
+
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Something went wrong.");
+            }
+        }
     }
 }
