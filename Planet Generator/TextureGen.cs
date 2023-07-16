@@ -74,7 +74,7 @@ namespace Planet_Generator
 
             AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, settings.ContinentBoost);
 
-            AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, -1 * settings.ContinentBoost);
+            AddContinents(heightMap, settings.ContinentCount, settings.ContinentRadius, settings.ContinentHinder);
 
             heightMap = RaiseHeightMap(heightMap, settings.RaiseAllLandAmount);
 
@@ -381,6 +381,7 @@ namespace Planet_Generator
         {
             Random r = new Random(DateTime.Now.Millisecond);
             var rangedColors = new List<List<Color>>();
+
             for (int i = 0; i < colorExpansionAmount; i++)
             {
                 rangedColors = ExpandColors(colors);

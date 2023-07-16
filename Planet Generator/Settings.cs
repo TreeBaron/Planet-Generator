@@ -21,6 +21,7 @@ namespace Planet_Generator
         public int ContinentRadius { get; set; } // resolution / 3
         public int CloudContinentRadius { get; set; }
         public int ContinentBoost { get; set; }
+        public int ContinentHinder { get; set; }
         public int CloudSmoothHeightMap { get; set; }
         public int SmoothHeightMapAmount { get; set; } // 12
 
@@ -62,6 +63,7 @@ namespace Planet_Generator
             settings.ContinentCount = 12;
             settings.ContinentRadius = 150;
             settings.ContinentBoost = 350;
+            settings.ContinentHinder = -350;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
             settings.ExpandColors = r.Next(1, 3);
@@ -120,6 +122,7 @@ namespace Planet_Generator
             settings.ContinentCount = 12;
             settings.ContinentRadius = 150;
             settings.ContinentBoost = 350;
+            settings.ContinentHinder = -350;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
             settings.ExpandColors = 1;
@@ -185,6 +188,7 @@ namespace Planet_Generator
             settings.ContinentCount = 12;
             settings.ContinentRadius = 145;
             settings.ContinentBoost = 150;
+            settings.ContinentHinder = -150;
             settings.SmoothHeightMapAmount = 12;
             settings.SmoothTextureAmount = 0;
             settings.ExpandColors = 1;
@@ -229,6 +233,7 @@ namespace Planet_Generator
             settings.ContinentRadius = 50;
             settings.CloudContinentRadius = 150;
             settings.ContinentBoost = 600;
+            settings.ContinentHinder = -600;
             settings.CloudSmoothHeightMap = 12;
             settings.SmoothHeightMapAmount = 2;
             settings.SmoothTextureAmount = 1;
@@ -275,16 +280,19 @@ namespace Planet_Generator
             var allKeys = allSettings.Keys.ToList();
             var settings = allSettings[allKeys[r.Next(0,allKeys.Count-1)]];
 
-            settings = GetTOSSettings(resolution);
-
             settings.AtmosphereColor = SampleImage(image, 1).First();
             settings.AddCraters = r.NextDouble() > 0.5 ? true : false;
             settings.GenerateClouds = r.NextDouble() > 0.5 ? true : false;
             settings.AtmosphereThickness = r.Next(1, 4);
             settings.Resolution = resolution;
             settings.CloudColors = SampleImage(image, 2);
-            settings.PlanetColors = GetColors(scaledImage);
-            settings.SmoothHeightMapAmount = 1;
+
+            var planetColors = GetColors(scaledImage);
+            planetColors.AddRange(SampleImage(image, 24));
+
+            settings.PlanetColors = planetColors;
+            settings.ContinentBoost = 150;
+            settings.ContinentHinder = r.Next(-50, -5);
 
             return settings;
         }
@@ -300,6 +308,20 @@ namespace Planet_Generator
             }
 
             return list;
+        }
+
+        private static List<Color> FilterToInterestingColors(List<Color> colors)
+        {
+            var outputs = colors.OrderByDescending((x) =>
+            {
+                var diff1 = Math.Abs(x.R - x.B);
+                var diff2 = Math.Abs(x.B - x.G);
+                var diff3 = Math.Abs(x.R - x.G);
+                return diff1 + diff2 + diff3;
+            });
+
+            // take top half
+            return outputs.Take(outputs.Count() / 2).ToList();
         }
 
         private static List<Color> GetColors(Bitmap image)
