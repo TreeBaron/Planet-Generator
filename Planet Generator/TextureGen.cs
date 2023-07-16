@@ -343,20 +343,13 @@ namespace Planet_Generator
             }
         }
 
-        private static List<List<Color>> ExpandColors(List<Color> colors)
+        private static List<Color> ExpandColors(List<Color> colors)
         {
-            var newColors = new List<List<Color>>();
-
-            for (int i = 0; i < colors.Count; i++)
+            var newColors = new List<Color>();
+            for (int i = 1; i < colors.Count; i++)
             {
-                var list = new List<Color>();
-                newColors.Add(list);
-                list.Add(colors[i]);
-
-                for (int x = 0; x < 50; x++)
-                {
-                    list.Add(RandomColorAdjust(colors[i]));
-                }    
+                newColors.Add(colors[i-1]);
+                newColors.Add(MergePixels(colors[i - 1], colors[i]));
             }
 
             return newColors;
@@ -380,11 +373,9 @@ namespace Planet_Generator
         private static void GenerateColorMap(int[,] heightMap, Bitmap origin, List<Color> colors, int colorExpansionAmount)
         {
             Random r = new Random(DateTime.Now.Millisecond);
-            var rangedColors = new List<List<Color>>();
-
             for (int i = 0; i < colorExpansionAmount; i++)
             {
-                rangedColors = ExpandColors(colors);
+                colors = ExpandColors(colors);
             }
 
             for (int x = 0; x < origin.Width; x++)
@@ -392,12 +383,10 @@ namespace Planet_Generator
                 for (int y = 0; y < origin.Height; y++)
                 {
                     double divisor = (255.0 * 3.0) / (colors.Count-1);
-                    var total = heightMap[x, y];
-                    total = Math.Max(1, total);
-                    var selectPosition = (int)(total / divisor) - 1;
-                    selectPosition = Math.Max(0, selectPosition);
-                    selectPosition = Math.Min(rangedColors.Count - 1, selectPosition);
-                    var color = rangedColors[selectPosition][r.Next(0, rangedColors[selectPosition].Count-1)];
+                    var total = heightMap[x, y] * divisor;
+                    total = Math.Max(0, total);
+                    total = Math.Min(colors.Count - 1, total);
+                    var color = colors[(int)total];
                     origin.SetPixel(x, y, color);
                 }
             }

@@ -1,5 +1,5 @@
 Features to Finish
-2. Load in image to create color set automagically
-5. Finish slideshow
-8. Random Planet
-9. Create Installer
+Finish slideshow
+Create Installer
+Make Video
+Open Source Code

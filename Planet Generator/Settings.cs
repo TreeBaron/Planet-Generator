@@ -271,14 +271,13 @@ namespace Planet_Generator
         #endregion Moon Settings
 
         #region From Image Settings
-        public static Settings GetSettingsFromImage(int resolution, Bitmap image)
+        public static Settings GetSettingsFromImage(int resolution, Bitmap image, Settings selectedSetting)
         {
             var scaledImage = new Bitmap(image, new Size(5, 5));
 
             Random r = new Random(DateTime.Now.Millisecond);
-            var allSettings = GetSettingsDictionary(resolution);
-            var allKeys = allSettings.Keys.ToList();
-            var settings = allSettings[allKeys[r.Next(0,allKeys.Count-1)]];
+
+            var settings = selectedSetting;
 
             settings.AtmosphereColor = SampleImage(image, 1).First();
             settings.AddCraters = r.NextDouble() > 0.5 ? true : false;
@@ -308,20 +307,6 @@ namespace Planet_Generator
             }
 
             return list;
-        }
-
-        private static List<Color> FilterToInterestingColors(List<Color> colors)
-        {
-            var outputs = colors.OrderByDescending((x) =>
-            {
-                var diff1 = Math.Abs(x.R - x.B);
-                var diff2 = Math.Abs(x.B - x.G);
-                var diff3 = Math.Abs(x.R - x.G);
-                return diff1 + diff2 + diff3;
-            });
-
-            // take top half
-            return outputs.Take(outputs.Count() / 2).ToList();
         }
 
         private static List<Color> GetColors(Bitmap image)

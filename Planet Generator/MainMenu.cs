@@ -176,7 +176,9 @@ namespace Planet_Generator
                     // regen settings to avoid object ref problems since gen can change settings objects
                     SettingsDictionary = Settings.GetSettingsDictionary(resolution);
 
-                    var settings = Settings.GetSettingsFromImage(resolution, bitmap);
+                    var selectedSettings = SettingsDictionary[(string)SettingsComboBox.SelectedItem];
+
+                    var settings = Settings.GetSettingsFromImage(resolution, bitmap, selectedSettings);
 
                     settings.Resolution = resolution;
 
