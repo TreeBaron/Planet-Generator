@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Planet_Generator
@@ -53,6 +55,11 @@ namespace Planet_Generator
 
             PictureBox.Image = (Image)TextureGen.GeneratePlanet(settings);
             PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
+
+
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"completed.wav");
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(path);
+            player.Play();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -114,6 +121,11 @@ namespace Planet_Generator
                 SettingsComboBox.Items.Add(key);
             }
             SettingsComboBox.SelectedIndex = 0;
+        }
+
+        private void CreditsButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Created By John Dodd\nSound Effects By Kenneth Cooney");
         }
     }
 }

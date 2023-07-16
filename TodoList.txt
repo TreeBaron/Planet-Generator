@@ -1,6 +1,6 @@
 Features to Finish
-1. Play sound when done loading
 2. Load in image to create color set automagically
 3. Gas Planets
-4. Craters?
 5. Finish slideshow
+6. Credits button include Kenneth Cooney
+7. Create Icon

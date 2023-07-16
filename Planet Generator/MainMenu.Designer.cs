@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainMenu));
             this.GenerateTextureButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.PictureBox = new System.Windows.Forms.PictureBox();
@@ -39,13 +40,14 @@
             this.Upscale = new System.Windows.Forms.CheckBox();
             this.SettingsComboBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.CreditsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // GenerateTextureButton
             // 
             this.GenerateTextureButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.GenerateTextureButton.Location = new System.Drawing.Point(12, 998);
+            this.GenerateTextureButton.Location = new System.Drawing.Point(12, 989);
             this.GenerateTextureButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.GenerateTextureButton.Name = "GenerateTextureButton";
             this.GenerateTextureButton.Size = new System.Drawing.Size(300, 63);
@@ -57,7 +59,7 @@
             // SaveButton
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveButton.Location = new System.Drawing.Point(512, 998);
+            this.SaveButton.Location = new System.Drawing.Point(512, 989);
             this.SaveButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(300, 63);
@@ -83,7 +85,7 @@
             // ResolutionTextBox
             // 
             this.ResolutionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ResolutionTextBox.Location = new System.Drawing.Point(144, 944);
+            this.ResolutionTextBox.Location = new System.Drawing.Point(144, 935);
             this.ResolutionTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ResolutionTextBox.Name = "ResolutionTextBox";
             this.ResolutionTextBox.Size = new System.Drawing.Size(100, 31);
@@ -94,7 +96,7 @@
             // 
             this.ResolutionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ResolutionLabel.AutoSize = true;
-            this.ResolutionLabel.Location = new System.Drawing.Point(12, 944);
+            this.ResolutionLabel.Location = new System.Drawing.Point(12, 935);
             this.ResolutionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ResolutionLabel.Name = "ResolutionLabel";
             this.ResolutionLabel.Size = new System.Drawing.Size(114, 25);
@@ -105,7 +107,7 @@
             // 
             this.PlanetNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.PlanetNameLabel.AutoSize = true;
-            this.PlanetNameLabel.Location = new System.Drawing.Point(506, 940);
+            this.PlanetNameLabel.Location = new System.Drawing.Point(506, 931);
             this.PlanetNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.PlanetNameLabel.Name = "PlanetNameLabel";
             this.PlanetNameLabel.Size = new System.Drawing.Size(135, 25);
@@ -116,7 +118,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 892);
+            this.label1.Location = new System.Drawing.Point(12, 883);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(127, 25);
@@ -127,7 +129,7 @@
             // AtmosphereTextBox
             // 
             this.AtmosphereTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AtmosphereTextBox.Location = new System.Drawing.Point(144, 892);
+            this.AtmosphereTextBox.Location = new System.Drawing.Point(144, 883);
             this.AtmosphereTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.AtmosphereTextBox.Name = "AtmosphereTextBox";
             this.AtmosphereTextBox.Size = new System.Drawing.Size(100, 31);
@@ -138,7 +140,7 @@
             // 
             this.Upscale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Upscale.AutoSize = true;
-            this.Upscale.Location = new System.Drawing.Point(511, 887);
+            this.Upscale.Location = new System.Drawing.Point(511, 878);
             this.Upscale.Name = "Upscale";
             this.Upscale.Size = new System.Drawing.Size(255, 29);
             this.Upscale.TabIndex = 8;
@@ -149,7 +151,7 @@
             // 
             this.SettingsComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SettingsComboBox.FormattingEnabled = true;
-            this.SettingsComboBox.Location = new System.Drawing.Point(17, 827);
+            this.SettingsComboBox.Location = new System.Drawing.Point(17, 818);
             this.SettingsComboBox.Name = "SettingsComboBox";
             this.SettingsComboBox.Size = new System.Drawing.Size(227, 33);
             this.SettingsComboBox.TabIndex = 9;
@@ -158,7 +160,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 789);
+            this.label2.Location = new System.Drawing.Point(13, 780);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(157, 25);
@@ -166,11 +168,23 @@
             this.label2.Text = "Planet Settings";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // CreditsButton
+            // 
+            this.CreditsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CreditsButton.Location = new System.Drawing.Point(511, 780);
+            this.CreditsButton.Name = "CreditsButton";
+            this.CreditsButton.Size = new System.Drawing.Size(301, 48);
+            this.CreditsButton.TabIndex = 11;
+            this.CreditsButton.Text = "Credits";
+            this.CreditsButton.UseVisualStyleBackColor = true;
+            this.CreditsButton.Click += new System.EventHandler(this.CreditsButton_Click);
+            // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(834, 1062);
+            this.Controls.Add(this.CreditsButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.SettingsComboBox);
             this.Controls.Add(this.Upscale);
@@ -182,6 +196,7 @@
             this.Controls.Add(this.PictureBox);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.GenerateTextureButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainMenu";
             this.Text = "Planet Generator - By John Dodd";
@@ -205,6 +220,7 @@
         private System.Windows.Forms.CheckBox Upscale;
         private System.Windows.Forms.ComboBox SettingsComboBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button CreditsButton;
     }
 }
 

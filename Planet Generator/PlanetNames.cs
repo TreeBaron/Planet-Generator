@@ -78,7 +78,7 @@ namespace Planet_Generator
 
         public static string GetRandomPlanetName()
         {
-            Random random = new Random(DateTime.Now.Second);
+            Random random = new Random(DateTime.Now.Millisecond);
 
             var postfix = "";
             int Rando = random.Next(-5, 11);
