@@ -128,7 +128,6 @@ namespace Planet_Generator
             // place atmosphere on canvas, over the planet
             var final =  OverlayImage(atmosphere, canvasAndPlanet, 0, 0, 1.0f);
 
-
             return final;
         }
 

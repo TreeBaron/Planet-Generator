@@ -70,7 +70,7 @@ namespace Planet_Generator
             if (PictureBox.Image != null)
             {
                 SaveFileDialog saveFileDialogue = new SaveFileDialog();
-                saveFileDialogue.Filter = "Png Image|*.png|JPeg Image|*.jpg|Bitmap Image|*.bmp";
+                saveFileDialogue.Filter = "Png Image|*.png";
                 saveFileDialogue.Title = "Save your Planet";
                 saveFileDialogue.FileName = PlanetNameLabel.Text;
                 saveFileDialogue.ShowDialog();
@@ -81,27 +81,8 @@ namespace Planet_Generator
                     // Saves the Image via a FileStream created by the OpenFile method.
                     System.IO.FileStream fs =
                         (System.IO.FileStream)saveFileDialogue.OpenFile();
-                    // Saves the Image in the appropriate ImageFormat based upon the
-                    // File type selected in the dialog box.
-                    // NOTE that the FilterIndex property is one-based.
-                    switch (saveFileDialogue.FilterIndex)
-                    {
-                        case 1:
-                            PictureBox.Image.Save(fs,
-                              System.Drawing.Imaging.ImageFormat.Jpeg);
-                            break;
-
-                        case 2:
-                            PictureBox.Image.Save(fs,
-                              System.Drawing.Imaging.ImageFormat.Bmp);
-                            break;
-
-                        case 3:
-                            PictureBox.Image.Save(fs,
+                    PictureBox.Image.Save(fs,
                               System.Drawing.Imaging.ImageFormat.Png);
-                            break;
-                    }
-
                     fs.Close();
                 }
             }
