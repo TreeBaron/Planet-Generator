@@ -108,7 +108,7 @@ namespace Planet_Generator
                 var upscaled = SmartScale(image, 4);
                 settings.Resolution *= 4;
 
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     SmoothColors(upscaled);
                 }

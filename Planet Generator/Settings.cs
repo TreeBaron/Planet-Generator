@@ -41,6 +41,154 @@ namespace Planet_Generator
 
         public int CraterCount { get; set; } = 25;
 
+        #region Random Settings
+        public static Settings GetRandomSettings(int resolution)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            var settings = new Settings();
+
+            settings.AtmosphereColor = GetRandomPlanetColors()[r.Next(0, GetRandomPlanetColors().Count)];
+            settings.Resolution = resolution;
+            settings.AtmosphereThickness = r.Next(0,6);
+            settings.AtmosphereTransparency = 0.5f;
+            settings.GenerateClouds = r.NextDouble() > 0.5 ? true : false;
+
+            settings.PlanetColors = Settings.GetRandomPlanetColors();
+            settings.CloudColors = Settings.GetRandomCloudColors();
+
+            settings.CloudContinentCount = 400;
+            settings.CloudContinentRadius = 20;
+            settings.CloudBoost = 800;
+            settings.CloudSmoothHeightMap = 6;
+            settings.CloudSmoothAmount = 1;
+
+            settings.ContinentCount = r.Next(12,16);
+            settings.ContinentRadius = r.Next(100, 150);
+            settings.ContinentBoost = r.Next(350, 550);
+            settings.ContinentHinder = r.Next(-550, -350);
+            settings.SmoothHeightMapAmount = 6;
+            settings.SmoothTextureAmount = r.Next(1,3);
+            settings.ExpandColors = r.Next(1, 3);
+
+            settings.RaiseAllLandAmount = r.Next(-100, 100);
+
+            settings.AddCraters = r.NextDouble() > 0.5 ? true : false; ;
+            settings.CraterCount = 6;
+            settings.CraterDepth = 1200;
+
+            return settings;
+        }
+
+        public static List<Color> GetRandomPlanetColors()
+        {
+            Random random = new Random();
+            return new List<Color>()
+            {
+                GetRandomColor(
+                    new List<Color> ()
+                    {
+                        Color.Blue,
+                        Color.Green,
+                        Color.Red,
+                        Color.LightBlue,
+                        Color.LightSkyBlue,
+                        Color.Purple,
+                        Color.GreenYellow,
+                        Color.DarkGreen,
+                        Color.DarkBlue,
+                        Color.DarkGray,
+                        Color.Black,
+                        Color.HotPink,
+                        Color.Yellow,
+                        Color.Aqua
+                    }),
+                GetRandomColor(
+                    new List<Color> ()
+                    {
+                        Color.Tan,
+                        Color.SandyBrown,
+                        Color.Khaki,
+                        Color.DarkKhaki,
+                        Color.SlateGray,
+                        Color.SlateBlue,
+                        Color.Beige,
+                        Color.DarkOliveGreen
+                    }),
+                GetRandomColor(
+                    new List<Color> ()
+                    {
+                        Color.Tan,
+                        Color.SandyBrown,
+                        Color.Khaki,
+                        Color.DarkKhaki,
+                        Color.SlateGray,
+                        Color.SlateBlue,
+                        Color.Beige,
+                        Color.DarkOliveGreen
+                    }),
+                GetRandomColor(
+                    new List<Color> ()
+                    {
+                        Color.Green,
+                        Color.GreenYellow,
+                        Color.Red,
+                        Color.DarkRed,
+                        Color.Maroon,
+                        Color.LightCyan,
+                        Color.Aquamarine,
+                        Color.Azure,
+                        Color.DarkOrchid,
+                    }),
+                GetRandomColor(
+                    new List<Color> ()
+                    {
+                        Color.Green,
+                        Color.GreenYellow,
+                        Color.Red,
+                        Color.DarkRed,
+                        Color.Maroon,
+                        Color.LightCyan,
+                        Color.Aquamarine,
+                        Color.Azure,
+                        Color.DarkOrchid,
+                    }),
+                Color.Gray,
+                Color.SlateGray,
+                Color.White
+            };
+        }
+
+        public static List<Color> GetRandomCloudColors()
+        {
+            Random random = new Random(DateTime.Now.Second);
+            return new List<Color>()
+            {
+                Color.Transparent,
+                GetRandomColor(
+                    new List<Color> ()
+                    {
+                        Color.White,
+                        Color.Gray,
+                        Color.Purple,
+                        Color.Yellow,
+                        Color.Cyan,
+                        Color.HotPink,
+                        Color.LimeGreen,
+                        Color.CornflowerBlue,
+                        Color.OrangeRed,
+                        Color.Orange
+                    }
+                )
+            };
+        }
+        #endregion
+
+        private static Color GetRandomColor(List<Color> colors)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            return colors[r.Next(0,colors.Count)];
+        }
+
         #region TOS Settings
         public static Settings GetTOSSettings(int resolution)
         {
@@ -265,6 +413,7 @@ namespace Planet_Generator
             map.Add("Moon", GetMoonSettings(resolution));
             map.Add("Third Impact", GetThirdImpactSettings(resolution));
             map.Add("TOS Planet", GetTOSSettings(resolution));
+            map.Add("True Random", GetRandomSettings(resolution));
             return map;
         }
 
