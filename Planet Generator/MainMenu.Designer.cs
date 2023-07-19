@@ -45,6 +45,7 @@
             this.BulkGenerateButton = new System.Windows.Forms.Button();
             this.AmountLabel = new System.Windows.Forms.Label();
             this.AmountTextBox = new System.Windows.Forms.TextBox();
+            this.BulkImageGenButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,7 +53,7 @@
             // 
             this.GenerateTextureButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.GenerateTextureButton.Location = new System.Drawing.Point(6, 576);
-            this.GenerateTextureButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GenerateTextureButton.Margin = new System.Windows.Forms.Padding(2);
             this.GenerateTextureButton.Name = "GenerateTextureButton";
             this.GenerateTextureButton.Size = new System.Drawing.Size(150, 33);
             this.GenerateTextureButton.TabIndex = 0;
@@ -64,7 +65,7 @@
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SaveButton.Location = new System.Drawing.Point(256, 576);
-            this.SaveButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SaveButton.Margin = new System.Windows.Forms.Padding(2);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(150, 33);
             this.SaveButton.TabIndex = 1;
@@ -79,7 +80,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.PictureBox.Location = new System.Drawing.Point(3, 11);
-            this.PictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.PictureBox.Margin = new System.Windows.Forms.Padding(2);
             this.PictureBox.Name = "PictureBox";
             this.PictureBox.Size = new System.Drawing.Size(400, 379);
             this.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -90,7 +91,7 @@
             // 
             this.ResolutionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ResolutionTextBox.Location = new System.Drawing.Point(72, 549);
-            this.ResolutionTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ResolutionTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.ResolutionTextBox.Name = "ResolutionTextBox";
             this.ResolutionTextBox.Size = new System.Drawing.Size(52, 20);
             this.ResolutionTextBox.TabIndex = 3;
@@ -134,7 +135,7 @@
             // 
             this.AtmosphereTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AtmosphereTextBox.Location = new System.Drawing.Point(72, 522);
-            this.AtmosphereTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.AtmosphereTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.AtmosphereTextBox.Name = "AtmosphereTextBox";
             this.AtmosphereTextBox.Size = new System.Drawing.Size(52, 20);
             this.AtmosphereTextBox.TabIndex = 6;
@@ -145,7 +146,7 @@
             this.Upscale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Upscale.AutoSize = true;
             this.Upscale.Location = new System.Drawing.Point(254, 516);
-            this.Upscale.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Upscale.Margin = new System.Windows.Forms.Padding(2);
             this.Upscale.Name = "Upscale";
             this.Upscale.Size = new System.Drawing.Size(131, 17);
             this.Upscale.TabIndex = 8;
@@ -157,7 +158,7 @@
             this.SettingsComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SettingsComboBox.FormattingEnabled = true;
             this.SettingsComboBox.Location = new System.Drawing.Point(8, 487);
-            this.SettingsComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SettingsComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.SettingsComboBox.Name = "SettingsComboBox";
             this.SettingsComboBox.Size = new System.Drawing.Size(116, 21);
             this.SettingsComboBox.TabIndex = 9;
@@ -177,8 +178,8 @@
             // CreditsButton
             // 
             this.CreditsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CreditsButton.Location = new System.Drawing.Point(256, 467);
-            this.CreditsButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CreditsButton.Location = new System.Drawing.Point(253, 487);
+            this.CreditsButton.Margin = new System.Windows.Forms.Padding(2);
             this.CreditsButton.Name = "CreditsButton";
             this.CreditsButton.Size = new System.Drawing.Size(150, 25);
             this.CreditsButton.TabIndex = 11;
@@ -190,7 +191,7 @@
             // 
             this.ImageLoadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ImageLoadButton.Location = new System.Drawing.Point(8, 435);
-            this.ImageLoadButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ImageLoadButton.Margin = new System.Windows.Forms.Padding(2);
             this.ImageLoadButton.Name = "ImageLoadButton";
             this.ImageLoadButton.Size = new System.Drawing.Size(160, 22);
             this.ImageLoadButton.TabIndex = 12;
@@ -201,8 +202,8 @@
             // BulkGenerateButton
             // 
             this.BulkGenerateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BulkGenerateButton.Location = new System.Drawing.Point(255, 430);
-            this.BulkGenerateButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.BulkGenerateButton.Location = new System.Drawing.Point(253, 456);
+            this.BulkGenerateButton.Margin = new System.Windows.Forms.Padding(2);
             this.BulkGenerateButton.Name = "BulkGenerateButton";
             this.BulkGenerateButton.Size = new System.Drawing.Size(150, 27);
             this.BulkGenerateButton.TabIndex = 13;
@@ -214,7 +215,7 @@
             // 
             this.AmountLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AmountLabel.AutoSize = true;
-            this.AmountLabel.Location = new System.Drawing.Point(255, 403);
+            this.AmountLabel.Location = new System.Drawing.Point(304, 397);
             this.AmountLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.AmountLabel.Name = "AmountLabel";
             this.AmountLabel.Size = new System.Drawing.Size(43, 13);
@@ -225,18 +226,31 @@
             // AmountTextBox
             // 
             this.AmountTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AmountTextBox.Location = new System.Drawing.Point(307, 403);
-            this.AmountTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.AmountTextBox.Location = new System.Drawing.Point(351, 394);
+            this.AmountTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.AmountTextBox.Name = "AmountTextBox";
             this.AmountTextBox.Size = new System.Drawing.Size(52, 20);
             this.AmountTextBox.TabIndex = 14;
             this.AmountTextBox.Text = "4";
+            // 
+            // BulkImageGenButton
+            // 
+            this.BulkImageGenButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BulkImageGenButton.Location = new System.Drawing.Point(253, 425);
+            this.BulkImageGenButton.Margin = new System.Windows.Forms.Padding(2);
+            this.BulkImageGenButton.Name = "BulkImageGenButton";
+            this.BulkImageGenButton.Size = new System.Drawing.Size(150, 27);
+            this.BulkImageGenButton.TabIndex = 16;
+            this.BulkImageGenButton.Text = "Bulk Images Gen";
+            this.BulkImageGenButton.UseVisualStyleBackColor = true;
+            this.BulkImageGenButton.Click += new System.EventHandler(this.BulkImageGenButton_Click);
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(417, 620);
+            this.Controls.Add(this.BulkImageGenButton);
             this.Controls.Add(this.AmountLabel);
             this.Controls.Add(this.AmountTextBox);
             this.Controls.Add(this.BulkGenerateButton);
@@ -254,7 +268,7 @@
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.GenerateTextureButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainMenu";
             this.Text = "Planet Generator - By John Dodd";
             this.Load += new System.EventHandler(this.MainMenu_Load);
@@ -282,6 +296,7 @@
         private System.Windows.Forms.Button BulkGenerateButton;
         private System.Windows.Forms.Label AmountLabel;
         private System.Windows.Forms.TextBox AmountTextBox;
+        private System.Windows.Forms.Button BulkImageGenButton;
     }
 }
 

@@ -254,7 +254,7 @@ namespace Planet_Generator
                     for (int i = 0; i < amount; i++)
                     {
                         // regen settings to avoid object ref problems since gen can change settings objects
-                        SettingsDictionary = Settings.GetSettingsDictionary(resolution);
+                        SettingsDictionary = Settings.GetBulkSettingsDictionary(resolution);
 
                         var keys = SettingsDictionary.Keys.ToList();
 
@@ -283,8 +283,115 @@ namespace Planet_Generator
                         }
                         catch(Exception ex)
                         {
-                            MessageBox.Show(ex.ToString());
-                            return;
+                            // continue...
+                        }
+                    }
+
+                    this.WindowState = FormWindowState.Normal;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.WindowState = FormWindowState.Normal;
+                MessageBox.Show("Something went wrong.");
+            }
+        }
+
+        private void BulkImageGenButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.WindowState = FormWindowState.Minimized;
+                var openFileDialog = new OpenFileDialog();
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                Random r = new Random(DateTime.Now.Millisecond);
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    var filePath = openFileDialog.FileName;
+                    var directory = Path.GetDirectoryName(filePath);
+                    var allFiles = Directory.GetFiles(directory);
+                    var allImageFiles = allFiles.Where(x => x.Contains(".png"));
+
+                    if(allImageFiles.Count() == 0)
+                    {
+                        MessageBox.Show("You must select a folder that contains .png images to base the color generation off of.");
+                        return;
+                    }
+
+                    int amount = -1;
+                    try
+                    {
+                        amount = Convert.ToInt32(AmountTextBox.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Enter a valid amount.");
+                        return;
+                    }
+
+                    int resolution = -1;
+                    try
+                    {
+                        resolution = Convert.ToInt32(ResolutionTextBox.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Enter a valid resolution.");
+                        return;
+                    }
+
+                    int atmosphereThickness = -1;
+                    try
+                    {
+                        atmosphereThickness = Convert.ToInt32(AtmosphereTextBox.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Enter a valid atmosphere thickness.");
+                        return;
+                    }
+
+                    var dynamicScale = Upscale.Checked;
+
+                    for (int i = 0; i < amount; i++)
+                    {
+                        // regen settings to avoid object ref problems since gen can change settings objects
+                        SettingsDictionary = Settings.GetBulkSettingsDictionary(resolution);
+
+                        var keys = SettingsDictionary.Keys.ToList();
+
+                        // random settings
+                        var settings = Settings.GetSettingsFromImage(resolution, 
+                            new Bitmap(allImageFiles.OrderBy(x => r.NextDouble()).First()),
+                            SettingsDictionary[keys[r.Next(0, keys.Count)]]);
+
+                        settings.Resolution = resolution;
+
+                        settings.Upscale = dynamicScale;
+
+                        PictureBox.Image = (Image)TextureGen.GeneratePlanet(settings);
+                        PlanetNameLabel.Text = PlanetNames.GetRandomPlanetName();
+                        PlanetNameLabel.Text += "-"+i;
+                        PictureBox.Refresh();
+                        PlanetNameLabel.Refresh();
+
+                        try
+                        {
+                            PictureBox.Image.Save(directory + "\\" + PlanetNameLabel.Text + "-" + r.Next(123, 999) + ".png");
+
+                            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"completed.wav");
+                            System.Media.SoundPlayer player = new System.Media.SoundPlayer(path);
+                            player.Play();
+                        }
+                        catch (Exception ex)
+                        {
+                            // continue...
                         }
                     }
 

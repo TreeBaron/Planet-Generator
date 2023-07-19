@@ -417,6 +417,19 @@ namespace Planet_Generator
             return map;
         }
 
+        public static Dictionary<string, Settings> GetBulkSettingsDictionary(int resolution)
+        {
+            var map = new Dictionary<string, Settings>();
+            map.Add("Earth-Like", GetEarthSettings(resolution));
+            map.Add("Moon", GetMoonSettings(resolution));
+            map.Add("TOS Planet", GetTOSSettings(resolution));
+            map.Add("True Random", GetRandomSettings(resolution));
+            map.Add("True Random2", GetRandomSettings(resolution));
+            map.Add("True Random3", GetRandomSettings(resolution));
+            map.Add("True Random4", GetRandomSettings(resolution));
+            return map;
+        }
+
         #endregion Moon Settings
 
         #region From Image Settings
